@@ -1,0 +1,3 @@
+const VALID_PERIOD_DATE_FORMATS = ['MM-YYYY', 'MM-YY', 'MMM-YY', 'MMMM-YYYY', 'M-YY', 'YY-MMM', 'M-YYYY'];
+
+export default VALID_PERIOD_DATE_FORMATS;

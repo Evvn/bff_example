@@ -1,0 +1,135 @@
+---
+kind: "Template"
+apiVersion: "v1"
+metadata:
+  name: "Deployment"
+  annotations:
+    description: "Deployment Template"
+labels:
+  template: "Deployment"
+objects:
+  - kind: Deployment
+    apiVersion: apps/v1beta2
+    metadata:
+      name: $(stack)-$(name)
+      namespace: $(namespace)
+      labels:
+        stack: $(stack)
+        app: $(name)
+    spec:
+      replicas: $((replicas))
+      selector:
+        matchLabels:
+          stack: $(stack)
+          app: $(name)
+      template:
+        metadata:
+          labels:
+            stack: $(stack)
+            app: $(name)
+        spec:
+          containers:
+            - image: $(image):$(imageTag)
+              name: $(name)
+              ports:
+                - containerPort: $((containerPort))
+              livenessProbe:
+                httpGet:
+                  path: /health
+                  port: $((containerPort))
+                initialDelaySeconds: 10
+                periodSeconds: 3
+              readinessProbe:
+                httpGet:
+                  path: /ready
+                  port: $((containerPort))
+                initialDelaySeconds: 10
+                timeoutSeconds: 8
+                periodSeconds: 10
+              env:
+                - name: AUTHENTICATION_BFF_CLIENT_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: reporting-web-bff-secrets
+                      key: reporting-web-bff-client-id
+                - name: AUTHENTICATION_BFF_CLIENT_SECRET
+                  valueFrom:
+                    secretKeyRef:
+                      name: reporting-web-bff-secrets
+                      key: reporting-web-bff-client-secret
+  - kind: Ingress
+    apiVersion: extensions/v1beta1
+    metadata:
+      annotations:
+        "kubernetes.io/tls-acme": "true"
+        nginx.ingress.kubernetes.io/whitelist-source-range: 59.100.228.148/30,49.255.232.68/30,203.34.100.0/24,210.10.213.48/30,61.68.26.8/30,49.255.235.122/31,111.69.34.208/28,202.50.111.0/24,210.10.223.196/30,210.10.223.248/30,49.255.235.66/31,203.20.70.0/24,111.69.51.32/28,210.8.198.174/32,49.255.41.118/30,13.55.182.101/32,52.65.221.137/32,54.153.183.163/32,203.221.75.206/32
+      name: $(stack)-$(name)
+      namespace: $(namespace)
+      labels:
+        stack: $(stack)
+        app: $(name)
+    spec:
+      rules:
+        - host: $(stack)-$(name).$(host)
+          http:
+            paths:
+              - backend:
+                  serviceName: $(stack)-$(name)
+                  servicePort: 80
+                path: /
+      tls:
+        - hosts:
+            - $(stack)-$(name).$(host)
+          secretName: $(stack)-$(name)-tls
+
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+      name: $(stack)-$(name)
+      namespace: $(namespace)
+      labels:
+        stack: $(stack)
+        app: $(name)
+    spec:
+      ports:
+        - port: 80
+          targetPort: $((containerPort))
+      selector:
+        stack: $(stack)
+        app: $(name)
+
+parameters:
+  - name: "stack"
+    description: "Kube stack name"
+    required: true
+    parameterType: string
+  - name: "name"
+    description: "Deployment name"
+    required: true
+    parameterType: string
+  - name: "namespace"
+    description: "kube namespace"
+    required: true
+    parameterType: string
+  - name: "containerPort"
+    description: "image port"
+    required: true
+    parameterType: "int"
+  - name: "image"
+    description: "ecr image"
+    required: true
+    parameterType: "string"
+  - name: "imageTag"
+    description: "image tag"
+    required: true
+    parameterType: "string"
+  - name: "host"
+    description: "host"
+    required: true
+    parameterType: string
+  - name: "replicas"
+    description: "number of replicas"
+    required: true
+    parameterType: "int"

@@ -1,0 +1,38 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "",
+  "Resources":
+  {
+    "AllowJupiterAccessRepository":
+    {
+      "Type": "AWS::ECR::Repository",
+      "Properties":
+      {
+        "RepositoryName" : "sme-web-bff",
+        "RepositoryPolicyText" :
+        {
+          "Version": "2008-10-17",
+          "Statement":
+          [{
+            "Sid": "allow-kubernetes-read-only",
+            "Effect": "Allow",
+            "Principal":
+            {
+              "AWS":
+              [
+                "arn:aws:iam::428235295317:root",
+                "arn:aws:iam::967276157215:root"
+              ]
+            },
+            "Action":
+            [
+              "ecr:GetDownloadUrlForLayer",
+              "ecr:BatchGetImage",
+              "ecr:BatchCheckLayerAvailability"
+            ]
+          }]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,7 @@
+# Configuration for image-tag can be found in ops/bin/deploy
+name: "mr-yum-bff"
+stack: "development"
+namespace: "mr-yum"
+image: "103639821168.dkr.ecr.ap-southeast-2.amazonaws.com/mr-yum-bff"
+containerPort: "5000"
+replicas: "1"

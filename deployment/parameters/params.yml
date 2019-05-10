@@ -1,0 +1,8 @@
+# Configuration for image-tag can be found in ops/bin/deploy
+name: "reporting-web-bff"
+stack: "development"
+namespace: "propelventures"
+image: "647762684056.dkr.ecr.ap-southeast-2.amazonaws.com/reporting-web-bff"
+containerPort: "5000"
+replicas: "1"
+host: "svc.platform.myobdev.com"

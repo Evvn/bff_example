@@ -1,0 +1,79 @@
+{
+  "name": "reporting-web-bff",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "nodemon --exec babel-node src/express.js",
+    "start:prod": "node build/express.js",
+    "prestart:prod": "npm run build",
+    "build": "babel src -d build",
+    "test": "jest --colors --coverage",
+    "lint": "eslint ./src",
+    "lint:fix": "eslint ./src --fix"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "**/src/**/*.{js,jsx}",
+      "!**/src/{app,express,index}.{js,jsx}",
+      "!**/src/extractor/HttpExtractor.js",
+      "!**/src/extractor/httpMapping/*.{js,jsx}",
+      "!**/src/middleware/*.{js,jsx}",
+      "!**/src/authentication/*.{js,jsx}",
+      "!**/*{Router,Module}.js"
+    ]
+  },
+  "dependencies": {
+    "airtable": "^0.5.10",
+    "ajv": "^6.0.0",
+    "axios": "^0.18.0",
+    "body-parser": "^1.19.0",
+    "cli": "^1.0.1",
+    "config": "^3.0.1",
+    "cors": "^2.8.5",
+    "doshii-sdk": "^1.0.11",
+    "dotenv": "^6.0.0",
+    "express": "~4.16.0",
+    "express-es7": "^2.0.3",
+    "faker": "^4.1.0",
+    "fs": "0.0.1-security",
+    "https": "^1.0.0",
+    "jasmine": "^3.3.1",
+    "lodash": "^4.17.11",
+    "make": "^0.8.1",
+    "moji-translate": "^1.0.8",
+    "moment": "^2.24.0",
+    "morgan": "^1.9.1",
+    "node-fetch": "^2.1.2",
+    "passport": "^0.4.0",
+    "pg": "^7.9.0",
+    "pusher": "^2.2.0",
+    "pusher-js": "^4.4.0",
+    "sequelize": "^5.2.12",
+    "socket.io": "^2.2.0",
+    "stripe": "^6.31.1",
+    "supertest": "^3.3.0",
+    "uuid": "3.3.2"
+  },
+  "peerDependencies": {
+    "eslint": "^5.3.0",
+    "eslint-plugin-import": "^2.14.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/node": "^7.2.2",
+    "@babel/plugin-proposal-object-rest-spread": "^7.4.0",
+    "@babel/preset-env": "^7.4.2",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "^23.4.0",
+    "eslint": "^5.10.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jest": "^21.22.0",
+    "eslint-plugin-sort-requires": "^2.1.0",
+    "jest": "^23.4.0",
+    "nodemon": "^1.18.9",
+    "regenerator-runtime": "^0.12.1",
+    "twilio": "^3.30.2"
+  }
+}
