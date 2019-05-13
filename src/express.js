@@ -26,13 +26,13 @@ let server;
 if(process.env.ENV_NAME === 'DEV_LOCAL' || process.env.ENV_NAME === 'MEMORY'){
   server = http.createServer(app);
 } else{
-  const key = fs.readFileSync(__dirname + '/privkey.pem');
-  const cert = fs.readFileSync(__dirname + '/cert.pem');
+  const key = fs.readFileSync('/etc/letsencrypt/live/api.mryumqa.com.au/privkey.pem', 'utf-8');
+  const cert = fs.readFileSync('/etc/letsencrypt/live/api.mryumqa.com.au/cert.pem', 'utf-8');
+  const ca = fs.readFileSync('/etc/letsencrypt/live/api.mryumqa.com.au/chain.pem', 'utf-8');
   const options = {
     key: key,
     cert: cert,
-    requestCert: true,
-    rejectUnauthorized: false,
+    ca
   }
   server = https.createServer(options, app);
 }
