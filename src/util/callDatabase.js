@@ -11,8 +11,9 @@ const callDatabase = async (route, onSuccess) => {
             const res = await axios.get(
             `${process.env.MR_YUM_DATABASE_SERVER}/${route}`,{
                 headers: {
-                "Content-Type" : 'application/json',
-                // Authorization: `Bearer ${process.env.REACT_APP_AIRTABLE_API_KEY}`
+                    "rejectUnauthorized": false,
+                    "Content-Type" : 'application/json',
+                    // Authorization: `Bearer ${process.env.REACT_APP_AIRTABLE_API_KEY}`
                 }
             }
             ); 
