@@ -5,11 +5,9 @@ const menuRouter = (services, router) => {
     menuService,
   } = services;
 
-  const requestType = 'airtable';
-
-  router.get('/menu/:venueName', (request, response, next) => {
+  router.get('/menu/:venueUrl', (request, response, next) => {
     const { authorizationToken, requestId } = response.locals;
-    const { venueName } = request.params;
+    const { venueUrl} = request.params;
     const {
       intents, params,
     } = request.body;
@@ -17,10 +15,7 @@ const menuRouter = (services, router) => {
         context: {
           authorizationToken,
           requestId,
-          intents,
-          params,
-          requestType,
-          venueName,
+          venueUrl,
         },
         onSuccess: (payload) => {
           response.json(payload);

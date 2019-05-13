@@ -1,12 +1,10 @@
 import * as intents from '../../menu/menuIntents';
 import models from '../../models/index';
+import callDatabase from '../../util/callDatabase.js';
 
 const menuMapping = {
   [intents.GET_MENU_DATA]: (context, onSuccess) => {
-    models.Venue.findByNameNoSpace(context.venueName)
-      .then((data) => {
-        onSuccess(data);
-      });
+    callDatabase(`db/menu/${context.venueUrl}`, onSuccess);
   },
   [intents.GET_VENUE_LIST]: (context, onSuccess) => {
     if (context.category === 'list') {

@@ -8,7 +8,6 @@ import axios from "axios";
 import './index';
 import app from './app';
 import models, { sequelize } from './models';
-import seedDatabase from './seeder/seedDatabase';
 import socketIo from 'socket.io';
 
 /**
@@ -24,7 +23,7 @@ app.set('port', port);
 
 
 let server;
-if(process.env.ENV_NAME === 'DEV_LOCAL'){
+if(process.env.ENV_NAME === 'DEV_LOCAL' || process.env.ENV_NAME === 'MEMORY'){
   server = http.createServer(app);
 } else{
   const key = fs.readFileSync(__dirname + '/privkey.pem');
@@ -84,12 +83,7 @@ function onError(error) {
       throw error;
   }
 }
-const reload = false; // if true db will clear and repopulate
-sequelize.sync({ force: reload }).then(() => {
-  if (reload){
-    seedDatabase();
-  }
-  server.listen(port);
-  server.on('error', onError);
-  server.on('listening', onListening);
-});
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);

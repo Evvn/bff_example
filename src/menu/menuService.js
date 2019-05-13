@@ -3,7 +3,7 @@ import {
   GET_VENUE_LIST,
 } from './menuIntents';
 
-const menuService = (airtableTransformer, extractor) => {
+const menuService = (menuTransformer, extractor) => {
 
   const getMenuData = ({
     context, onSuccess, onFailure,
@@ -12,7 +12,7 @@ const menuService = (airtableTransformer, extractor) => {
       intents: [GET_MENU_DATA],
       context,
       onSuccess: (airtablePayload) => {
-        onSuccess(airtableTransformer.getMenuData(airtablePayload));
+        onSuccess(menuTransformer.getMenuData(airtablePayload));
       },
       onFailure,
     });
@@ -25,7 +25,7 @@ const menuService = (airtableTransformer, extractor) => {
       intents: [GET_VENUE_LIST],
       context,
       onSuccess: (airtablePayload) => {
-        onSuccess(context.category !== 'list' ? airtableTransformer.getVenueList(airtablePayload) : airtableTransformer.getVenueNames(airtablePayload));
+        onSuccess(context.category !== 'list' ? menuTransformer.getVenueList(airtablePayload) : menuTransformer.getVenueNames(airtablePayload));
       },
       onFailure,
     });
