@@ -28,7 +28,12 @@ if(process.env.ENV_NAME === 'DEV_LOCAL' || process.env.ENV_NAME === 'MEMORY'){
 } else{
   const key = fs.readFileSync(__dirname + '/privkey.pem');
   const cert = fs.readFileSync(__dirname + '/cert.pem');
-  const options = { key: key, cert: cert, }
+  const options = {
+    key: key,
+    cert: cert,
+    requestCert: true,
+    rejectUnauthorized: false,
+  }
   server = https.createServer(options, app);
 }
 
