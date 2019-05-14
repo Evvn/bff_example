@@ -27,6 +27,18 @@ export const createOrder = {
         type: 'single',
         surcounts: [],
         options: [],
+        totalBeforeSurcounts: '0',
+        totalAfterSurcounts: '0',
+        posId: ''
+    },
+
+    BUNDLE_ORDER_ITEM: {
+        name: '',
+        quantity: '1',
+        unitPrice: '0',
+        type: 'single',
+        surcounts: [],
+        options: [],
         includedItems: [],
         totalBeforeSurcounts: '0',
         totalAfterSurcounts: '0',
