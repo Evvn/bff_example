@@ -1,4 +1,4 @@
-import * as templates from '../../enums/commonEnums';
+import * as templates from '../../../enums/commonEnums.js';
 
 export const createOrderPreprocess = (rawOrders, doshiiLocationId) => {
     const { createOrder } = templates;
