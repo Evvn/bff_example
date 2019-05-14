@@ -21,11 +21,10 @@ export const createOrderPreprocess = (rawOrders, doshiiLocationId) => {
 
     //Add Trasaction Data
     orderPayload.transactions = [{
-        ...{
             amount: orderTotal,
             reference: stripeId,
-        },
-        ...createOrder.TRANSCATION,
+            prepaid: true,
+            method: credit,
     }];
 
     //Populate Items
