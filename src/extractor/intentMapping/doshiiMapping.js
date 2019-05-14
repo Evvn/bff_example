@@ -2,6 +2,9 @@ import doshiiConnector from '@mryum/doshii-sdk';
 
 import * as intents from '../../ordering/intents/doshiiIntents';
 import * as templates from '../../enums/commonEnums';
+import * as preprocessors from './preprocessors/doshiiPreprocessors.js';
+import sendSms from '../../util/sendSms.js';
+import emojis from 'moji-translate';
 
 
 
@@ -87,15 +90,19 @@ const members = {
   [intents.REMOVE_MEMBER]: params => doshii.Members.remove(params),
 };
 
+const { createOrderPreprocess } = preprocessors;
 const orders = {
   [intents.RETRIEVE_ALL_ORDERS]: params => doshii.Orders.retrieveAll(params),
   [intents.RETRIEVE_ORDER]: params => doshii.Orders.retrieveOne(params),
   [intents.CREATE_ORDER]: (params, onSuccess) => {
-    doshii.Orders.create({
-      ...templates.createOrder.BASE,
-      doshiiLocationId: params.doshiiLocationId,
-      ...params.body
-    }).then((response) => onSuccess(response))
+    doshii.Orders.create(createOrderPreprocess(params.body, params.doshiiLocationId))
+      .then((response) => {
+        const {phone, name} = params.body;
+        const message = `Hi ${name}, your order has been successfully placed. You will recieve a message when it is ready! `
+          + emojis.translate('snowflake grin ice_skate pizza snowman');
+        sendSms(phone, message, () => {});
+        onSuccess(response);
+      });
   },
   [intents.UPDATE_ORDER]: params => doshii.Orders.update(params),
   [intents.CANCEL_ORDER]: (params, onSuccess) => doshii_cancelOrder(params, onSuccess),

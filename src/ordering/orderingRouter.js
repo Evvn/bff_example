@@ -73,7 +73,7 @@ const orderingRouter = (services, router) => {
     });
   });
 
-  router.post("/ordering/doshii/:locationId/createOrder", (request, response, next) => {
+  router.post("/ordering/:locationId/createOrder", (request, response, next) => {
     const { authorizationToken, requestId } = response.locals;
     const { locationId } = request.params
     orderingService.doshii_createOrder({

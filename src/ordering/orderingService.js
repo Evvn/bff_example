@@ -29,6 +29,7 @@ const orderingService = ({ doshiiTransformer, orderMenuTransformer }, extractor)
     });
   };
 
+
   const makeStripeCharge = ({
     context, onSuccess, onFailure,
   }) => {
