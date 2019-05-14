@@ -33,9 +33,9 @@ export const createOrderPreprocess = (rawOrders, doshiiLocationId) => {
         type: clientType,
         surcounts: [],
         items: Object.keys(items).map(itemKey => {
-            console.log(item);
             const { ORDER_ITEM } = createOrder;
             const item = items[itemKey];
+            console.log(item);
             ORDER_ITEM.name = item.name;
             ORDER_ITEM.unitPrice = item.price;
             ORDER_ITEM.totalBeforeSurcounts = item.price;
