@@ -11,10 +11,9 @@ export const createOrderPreprocess = (rawOrders, doshiiLocationId) => {
         phone,
         clientType,
     } = rawOrders;
-    const orderPayload = {};
 
     //Fill in order base
-    orderPayload = {...createOrder.BASE};
+    const orderPayload = createOrder.BASE;
     orderPayload.name = name;
     orderPayload.email = email;
     orderPayload.doshiiLocationId = doshiiLocationId;
