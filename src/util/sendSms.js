@@ -1,6 +1,6 @@
 import twilio from 'twilio';
 
-const sendSms = (number, message, onSuccess) => {
+export const sendSms = (number, message, onSuccess) => {
     const client = twilio(process.env.TWILIO_ACCOUT_SID,process.env.TWILIO_AUTH_TOKEN);
     client.messages
     .create({
