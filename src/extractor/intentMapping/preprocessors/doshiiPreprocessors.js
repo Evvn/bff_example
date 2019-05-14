@@ -35,11 +35,11 @@ export const createOrderPreprocess = (rawOrders, doshiiLocationId) => {
         items: Object.keys(items).map(itemKey => {
             const { ORDER_ITEM } = createOrder;
             const item = items[itemKey];
-            ORDER_ITEM.name = item.NAME;
-            ORDER_ITEM.unitPrice = item.PRICE;
-            ORDER_ITEM.totalBeforeSurcounts = item.PRICE;
-            ORDER_ITEM.totalAfterSurcounts = item.PRICE;
-            ORDER_ITEM.posId = item.DOSHII_POS_ID;
+            ORDER_ITEM.name = item.name;
+            ORDER_ITEM.unitPrice = item.price;
+            ORDER_ITEM.totalBeforeSurcounts = item.price;
+            ORDER_ITEM.totalAfterSurcounts = item.price;
+            ORDER_ITEM.posId = '0000000026' //item.DOSHII_POS_ID;
             return ORDER_ITEM;
         })
     }
