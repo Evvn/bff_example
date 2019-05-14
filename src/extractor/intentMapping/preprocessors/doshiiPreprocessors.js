@@ -23,8 +23,8 @@ export const createOrderPreprocess = (rawOrders, doshiiLocationId) => {
     //Add Trasaction Data
     orderPayload.BASE.transactions = [{
         ...{
-            amount = orderTotal,
-            reference = stripeId,
+            amount: orderTotal,
+            reference: stripeId,
         },
         ...createOrder.TRANSCATION,
     }];
