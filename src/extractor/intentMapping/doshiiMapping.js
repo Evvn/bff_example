@@ -101,6 +101,7 @@ const orders = {
         const message = `Hi ${name}, your order has been successfully placed. You will recieve a message when it is ready! `
           + emojis.translate('snowflake grin ice_skate pizza snowman');
         sendSms(phone, message, () => {});
+        console.log(response);
         onSuccess(response);
       });
   },

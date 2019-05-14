@@ -10,7 +10,7 @@ const sendSms = (number, message, onSuccess) => {
     })
     .then(res => {
       console.log('SMS Success')
-      onSucess(res)
+      onSuccess(res);
     })
     .catch(err => {
       console.log(err);
