@@ -14,14 +14,14 @@ export const createOrderPreprocess = (rawOrders, doshiiLocationId) => {
     const orderPayload = {};
 
     //Fill in order base
-    orderPayload.BASE = createOrder.BASE;
-    orderPayload.BASE.name = name;
-    orderPayload.BASE.email = email;
-    orderPayload.BASE.doshiiLocationId = doshiiLocationId;
-    orderPayload.BASE.consumer = { name, phone, };
+    orderPayload = createOrder.BASE;
+    orderPayload.name = name;
+    orderPayload.email = email;
+    orderPayload.doshiiLocationId = doshiiLocationId;
+    orderPayload.consumer = { name, phone, };
 
     //Add Trasaction Data
-    orderPayload.BASE.transactions = [{
+    orderPayload.transactions = [{
         ...{
             amount: orderTotal,
             reference: stripeId,
@@ -30,7 +30,7 @@ export const createOrderPreprocess = (rawOrders, doshiiLocationId) => {
     }];
 
     //Populate Items
-    orderPayload.BASE.order = {
+    orderPayload.order = {
         type: clientType,
         surcounts: [],
         items: Object.keys(items).map(itemKey => {
