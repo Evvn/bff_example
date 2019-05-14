@@ -24,7 +24,7 @@ export const createOrderPreprocess = (rawOrders, doshiiLocationId) => {
             amount: orderTotal,
             reference: stripeId,
             prepaid: true,
-            method: credit,
+            method: 'credit',
     }];
 
     //Populate Items
