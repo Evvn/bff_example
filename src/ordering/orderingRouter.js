@@ -134,9 +134,28 @@ const orderingRouter = (services, router) => {
     });
   });
 
+  router.post("/ordering/webhook", (request, response, next) => {
+    console.log('did a thing here is teh body', request.body, 'and just incase', JSON.stringify(request.body));
+    const { verify } = request.query;
+		console.log("TCL: orderingRouter -> verify", verify)
+    response.json(verify);
+  });
+  
+  router.post("/ordering/createhook/:event", (request, response, next) => {
+    const { event } = request.params;
+    orderingService.doshii_create_webhook({
+      context: {
+        event,
+        webhookUrl: 'https://api.mryumqa.com.au:5000/yumbff/ordering/webhook'
+      },
+      onSuccess: payload => {
+        response.json(payload)
+      },
+      onFailure: next
+    });
+  });
+
   return router;
 };
-
-
 
 export default orderingRouter;
