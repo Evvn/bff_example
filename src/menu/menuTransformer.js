@@ -58,8 +58,8 @@ const buildVenuePayload = (data) => {
 
 const menuTransformer = {
   getMenuData: data => buildMenuPayload(data),
-  getVenueList: data => buildVenuePayload(data),
-  getVenueNames: data => data.map(datum => datum.NAME_NO_SPACE),
+  getVenueList: data => data,
+  getVenueNames: data => data,
 };
 
 export default menuTransformer;

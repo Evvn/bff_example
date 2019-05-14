@@ -8,15 +8,9 @@ const menuMapping = {
   },
   [intents.GET_VENUE_LIST]: (context, onSuccess) => {
     if (context.category === 'list') {
-      models.Venue.findAll({where: {}})
-        .then((data) => {
-          onSuccess(data);
-        });
+      callDatabase(`db/menu/venues`, onSuccess);
     } else {
-      models.Venue.findByCategory(context.category)
-        .then((data) => {
-          onSuccess(data);
-        });
+      callDatabase(`db/menu/venues/${context.category}`);
     }
   }
 };
