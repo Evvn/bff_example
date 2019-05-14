@@ -40,6 +40,7 @@ export const createOrderPreprocess = (rawOrders, doshiiLocationId) => {
             ORDER_ITEM.totalBeforeSurcounts = item.PRICE;
             ORDER_ITEM.totalAfterSurcounts = item.PRICE;
             ORDER_ITEM.posId = item.DOSHII_POS_ID;
+            return ORDER_ITEM;
         })
     }
 
