@@ -11,7 +11,9 @@ import {
   CANCEL_ORDER,
   CREATE_CHECKIN,
   CANCEL_CHECKIN,
-  CREATE_WEBHOOKS
+  CREATE_WEBHOOKS,
+  RETRIEVE_WEBHOOKS,
+  DELETE_WEBHOOKS
 } from "./intents/doshiiIntents";
 
 const orderingService = ({ doshiiTransformer, orderMenuTransformer }, extractor) => {
@@ -133,6 +135,28 @@ const orderingService = ({ doshiiTransformer, orderMenuTransformer }, extractor)
     });
   }
 
+  const doshii_delete_webhook = ({ context, onSuccess, onFailure }) => {
+    extractor.readMany({
+      intents: [DELETE_WEBHOOKS],
+      context,
+      onSuccess: payload => {
+        onSuccess(doshiiTransformer.deleteWebhook(payload));
+      },
+      onFailure
+    });
+  }
+
+  const doshii_get_webhook = ({ context, onSuccess, onFailure }) => {
+    extractor.readMany({
+      intents: [RETRIEVE_WEBHOOKS],
+      context,
+      onSuccess: payload => {
+        onSuccess(doshiiTransformer.getWebhooks(payload));
+      },
+      onFailure
+    });
+  }
+
   return {
     getOrderMenuData,
     makeStripeCharge,
@@ -144,6 +168,8 @@ const orderingService = ({ doshiiTransformer, orderMenuTransformer }, extractor)
     doshii_createCheckin,
     doshii_cancelCheckin,
     doshii_create_webhook,
+    doshii_delete_webhook,
+    doshii_get_webhook,
   };
 };
 

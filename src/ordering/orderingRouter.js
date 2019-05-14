@@ -155,6 +155,30 @@ const orderingRouter = (services, router) => {
     });
   });
 
+  router.delete("/ordering/cancelhook/:event", (request, response, next) => {
+    const { event } = request.params;
+    orderingService.doshii_delete_webhook({
+      context: {
+        event,
+      },
+      onSuccess: payload => {
+        response.json(payload)
+      },
+      onFailure: next
+    });
+  });
+
+  // busted ask doshii peeps wuts up
+  router.get("/ordering/gethooks", (request, response, next) => {
+    orderingService.doshii_get_webhook({
+      context: {},
+      onSuccess: payload => {
+        response.json(payload)
+      },
+      onFailure: next
+    });
+  });
+
   return router;
 };
 
