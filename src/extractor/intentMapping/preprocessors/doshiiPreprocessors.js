@@ -14,7 +14,7 @@ export const createOrderPreprocess = (rawOrders, doshiiLocationId) => {
     const orderPayload = {};
 
     //Fill in order base
-    orderPayload = createOrder.BASE;
+    orderPayload = {...createOrder.BASE};
     orderPayload.name = name;
     orderPayload.email = email;
     orderPayload.doshiiLocationId = doshiiLocationId;
