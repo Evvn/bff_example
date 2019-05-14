@@ -8,7 +8,7 @@ const callDatabase = async (route, onSuccess) => {
             res = {data: mockMenu};
         }
         else{
-            const res = await axios.get(
+            res = await axios.get(
             `${process.env.MR_YUM_DATABASE_SERVER}/${route}`,{
                 headers: {
                     "rejectUnauthorized": false,
