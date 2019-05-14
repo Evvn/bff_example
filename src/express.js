@@ -8,7 +8,6 @@ import axios from "axios";
 import './index';
 import app from './app';
 import models, { sequelize } from './models';
-import seedDatabase from './seeder/seedDatabase';
 import socketIo from 'socket.io';
 
 /**
@@ -24,12 +23,17 @@ app.set('port', port);
 
 
 let server;
-if(process.env.ENV_NAME === 'DEV_LOCAL'){
+if(process.env.ENV_NAME === 'DEV_LOCAL' || process.env.ENV_NAME === 'MEMORY'){
   server = http.createServer(app);
 } else{
-  const key = fs.readFileSync(__dirname + '/privkey.pem');
-  const cert = fs.readFileSync(__dirname + '/cert.pem');
-  const options = { key: key, cert: cert, }
+  const key = fs.readFileSync('/etc/letsencrypt/live/api.mryumqa.com.au/privkey.pem', 'utf-8');
+  const cert = fs.readFileSync('/etc/letsencrypt/live/api.mryumqa.com.au/cert.pem', 'utf-8');
+  const ca = fs.readFileSync('/etc/letsencrypt/live/api.mryumqa.com.au/chain.pem', 'utf-8');
+  const options = {
+    key: key,
+    cert: cert,
+    ca
+  }
   server = https.createServer(options, app);
 }
 
@@ -84,12 +88,7 @@ function onError(error) {
       throw error;
   }
 }
-const reload = false; // if true db will clear and repopulate
-sequelize.sync({ force: reload }).then(() => {
-  if (reload){
-    seedDatabase();
-  }
-  server.listen(port);
-  server.on('error', onError);
-  server.on('listening', onListening);
-});
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);

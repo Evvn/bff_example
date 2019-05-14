@@ -1,10 +1,10 @@
 import createMenuRouter from './menuRouter';
 import createMenuService from './menuService';
-import airtableTransformer from './airtableTransformer';
+import menuTransformer from './menuTransformer';
 
 const initializeMenuModule = (extractor, router) => {
   const menuService = createMenuService(
-    airtableTransformer,
+    menuTransformer,
     extractor,
   );
 
