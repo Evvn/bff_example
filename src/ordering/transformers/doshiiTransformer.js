@@ -8,6 +8,8 @@ const doshiiTransformer = {
   createCheckin: data => data,
   cancelCheckin: data => data,
   createWebhook: data => data,
+  deleteWebhook: data => data,
+  getWebhooks: data => data,
 };
 
 export default doshiiTransformer;

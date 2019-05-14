@@ -140,7 +140,7 @@ const transactions = {
 };
 
 const webhook = {
-  [intents.RETRIEVE_WEBHOOKS]: (params, onSuccess) => doshii.Webhooks.get().then((result) => onSuccess(result)),
+  [intents.RETRIEVE_WEBHOOKS]: (params, onSuccess) => doshii.Webhooks.get(),//.then((result) => onSuccess(result)),
   [intents.CREATE_WEBHOOKS]: (params, onSuccess) => doshii.Webhooks.create({event: params.event, webhookUrl: params.webhookUrl}).then((result) => onSuccess(result)),
   [intents.UPDATE_WEBHOOKS]: (params, onSuccess) => doshii.Webhooks.update({event: params.event, webhookUrl: params.webhookUrl}).then((result) => onSuccess(result)),
   [intents.DELETE_WEBHOOKS]: (params, onSuccess) => doshii.Webhooks.delete({event: params.event}).then((result) => onSuccess(result))
