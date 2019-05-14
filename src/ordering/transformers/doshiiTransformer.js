@@ -7,6 +7,7 @@ const doshiiTransformer = {
   cancelOrder: data => data,
   createCheckin: data => data,
   cancelCheckin: data => data,
+  createWebhook: data => data,
 };
 
 export default doshiiTransformer;

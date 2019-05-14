@@ -84,6 +84,63 @@ export const cancelCheckin = {
     tableNames: [],
 }
 
+export const updateWebhook = {
+    event: '',
+    webhookUrl: ''
+}
+
+export const createWebhook = {
+    event: '',
+    webhookUrl: ''
+}
+
+export const deleteWebhook = {
+    event: ''
+}
+
+export const events = {
+    transaction_created: { 
+        event: 'transaction_created',
+        data: {
+            id: '',
+            locationId: '',
+            status: '',
+            uri: ''
+        }
+    },
+    order_updated: {
+        event: 'order_updated',
+        data: {
+            id: "",
+            orderId: "",
+            locationId: "",
+            status: "",
+            posRef: "",
+            posTerminalId: "",
+            requestData: {
+                accountId: "",
+                expiryDate: ""
+            },
+            uri: ""
+        }
+    },
+    transaction_updated: {
+        event: 'transaction_updated',
+        data: {
+            id: "",
+            orderId: "",
+            locationId: "",
+            status: "",
+            posRef: "",
+            posTerminalId: "",
+            verifyData: {
+                imageUri: ""
+            },
+            uri: ""
+        }
+    }
+}
+
     // subscribe to location
   // doshii.Locations.subscribe({locationId: '8KXM0OD4'}).then((result) =>{
   //   console.log(result)
