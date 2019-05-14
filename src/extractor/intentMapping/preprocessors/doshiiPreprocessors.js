@@ -44,5 +44,6 @@ export const createOrderPreprocess = (rawOrders, doshiiLocationId) => {
         })
     }
 
+    console.log(JSON.stringify(orderPayload));
     return orderPayload;
 };
