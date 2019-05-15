@@ -29,7 +29,7 @@ export const createOrderPreprocess = (rawOrders, doshiiLocationId) => {
 
     //Populate Items
     orderPayload.order = {
-        externalOrderRef = stripeId,
+        externalOrderRef: stripeId,
         type: clientType,
         surcounts: [],
         items: Object.keys(items).map(itemKey => {
