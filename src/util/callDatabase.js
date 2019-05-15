@@ -1,7 +1,7 @@
 import axios from 'axios';
 import mockMenu from './mockMenu.json';
 
-const callDatabase = async (route, onSuccess) => {
+export const callDatabase = async (route, onSuccess) => {
     try {
         let res;
         if(process.env.ENV_NAME === 'MEMORY'){
@@ -25,7 +25,7 @@ const callDatabase = async (route, onSuccess) => {
     }
 };
 
-const postToDatabase = async (route, onSuccess, body) => {
+export const postToDatabase = async (route, onSuccess, body) => {
     try {
         let res;
         if(process.env.ENV_NAME === 'MEMORY'){
@@ -49,5 +49,3 @@ const postToDatabase = async (route, onSuccess, body) => {
         onSuccess(error);
     }
 };
-
-export default { callDatabase, postToDatabase };
