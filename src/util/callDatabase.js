@@ -25,7 +25,7 @@ const callDatabase = async (route, onSuccess) => {
     }
 };
 
-const postToDatabase = async (route, body, onSuccess) => {
+const postToDatabase = async (route, onSuccess, body) => {
     try {
         let res;
         if(process.env.ENV_NAME === 'MEMORY'){
