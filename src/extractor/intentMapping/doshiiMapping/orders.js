@@ -1,6 +1,7 @@
 import doshiiConnector from '@mryum/doshii-sdk';
 import * as preprocessors from '../preprocessors/doshiiPreprocessors.js';
 import sendSms from '../../../util/sendSms.js';
+import { callDatabase, postToDatabase }  from '../../../util/callDatabase.js';
 import emojis from 'moji-translate';
 import * as intents from '../../../ordering/intents/doshiiIntents.js';
 
@@ -49,18 +50,36 @@ const cancelOrder = (params, onSuccess) => {
     });
   };
 
+const buildDatabasePayload = (body) => {
+  return {
+    STRIPE_ID: body.stripeId,
+    VENUE_NAME: body.venueName,
+    ITEMS: JSON.stringify(body.items),
+    CUSTOMER_NAME: body.name,
+    CUSTOMER_PHONE: body.phone,
+    CLIENT_TYPE: body.clientType,
+    REDEMPTION_CODE: body.redemptionCode,
+    ORDER_TOTAL: body.orderTotal,
+    STATUS: 'PENDING',
+  };
+}
+
 const orders = {
   [intents.RETRIEVE_ALL_ORDERS]: params => doshii.Orders.retrieveAll(params),
   [intents.RETRIEVE_ORDER]: params => doshii.Orders.retrieveOne(params),
   [intents.CREATE_ORDER]: (params, onSuccess) => {
     doshii.Orders.create(createOrderPreprocess(params.body, params.doshiiLocationId))
       .then((response) => {
-        const {phone, name} = params.body;
-        const message = `Hi ${name}, your order has been successfully placed. You will recieve a message when it is ready! `
-          + emojis.translate('snowflake grin ice_skate pizza snowman');
-        sendSms(phone, message, () => {});
-        console.log(response);
-        onSuccess(response);
+          const sendSmsOnSuccess = (phone, name) => {
+            const message = `Hi ${name}, your order has been successfully placed. You will recieve a message when it is ready! `
+            + emojis.translate('snowflake grin ice_skate pizza snowman');
+            sendSms(phone, message, () => {});
+          }
+          postToDatabase('orders', () => {sendSmsOnSuccess(params.body.phone, params.body.name)}, buildDatabasePayload(params.body))
+          .then(() => {
+            console.log(response);
+            onSuccess(response);
+          })
       });
   },
   [intents.UPDATE_ORDER]: params => doshii.Orders.update(params),

@@ -150,9 +150,17 @@ const orderingRouter = (services, router) => {
   // Also needs to respond with a hash from verify query string to complete the
   // webhook registration process
   router.post("/ordering/webhook", (request, response, next) => {
-    console.log('did a thing here is teh body', request.body, 'and just incase', JSON.stringify(request.body));
     const { verify } = request.query;
-		console.log("TCL: orderingRouter -> verify", verify)
+    orderingService.doshii_catch_webhook({
+      context: {
+        event: verify,
+      },
+      onSuccess: payload => {
+        console.log(payload);
+      },
+      onFailure: next
+    });
+
     response.json(verify);
   });
   
