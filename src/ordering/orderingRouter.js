@@ -169,9 +169,12 @@ const orderingRouter = (services, router) => {
   });
 
   // busted ask doshii peeps wuts up
-  router.get("/ordering/gethooks", (request, response, next) => {
+  router.get("/ordering/gethooks/:locationId", (request, response, next) => {
+    const { locationId } = request.params;
     orderingService.doshii_get_webhook({
-      context: {},
+      context: {
+        doshiiLocationId: locationId,
+      },
       onSuccess: payload => {
         response.json(payload)
       },
