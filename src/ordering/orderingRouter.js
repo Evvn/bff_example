@@ -76,6 +76,7 @@ const orderingRouter = (services, router) => {
   router.post("/ordering/:locationId/createOrder", (request, response, next) => {
     const { authorizationToken, requestId } = response.locals;
     const { locationId } = request.params
+	  console.log(request.body);
     orderingService.doshii_createOrder({
       context: {
         doshiiLocationId: locationId,
