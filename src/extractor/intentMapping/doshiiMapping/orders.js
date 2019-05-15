@@ -68,19 +68,34 @@ const orders = {
   [intents.RETRIEVE_ALL_ORDERS]: params => doshii.Orders.retrieveAll(params),
   [intents.RETRIEVE_ORDER]: params => doshii.Orders.retrieveOne(params),
   [intents.CREATE_ORDER]: (params, onSuccess) => {
+    const sendSmsOnSuccess = (phone, name) => {
+      const message = `Hi ${name}, your order has been successfully placed. You will recieve a message when it is ready! `
+      + emojis.translate('snowflake grin ice_skate pizza snowman');
+      sendSms(phone, message, () => {});
+    }
+    
+    const sendSmsOnFailure = (phone, name) => {
+      const message = `Hi ${name}, your order has NOT been successfully placed. You will recieve a message when it is ready! `
+      + emojis.translate('snowflake grin ice_skate pizza snowman');
+      sendSms(phone, message, () => {});
+    }
+
+    const timedOut = setTimeout(() => {
+      sendSmsOnFailure(params.body.phone, params.body.name);
+    }, 20000);
+
     doshii.Orders.create(createOrderPreprocess(params.body, params.doshiiLocationId))
-      .then((response) => {
-          const sendSmsOnSuccess = (phone, name) => {
-            const message = `Hi ${name}, your order has been successfully placed. You will recieve a message when it is ready! `
-            + emojis.translate('snowflake grin ice_skate pizza snowman');
-            sendSms(phone, message, () => {});
-          }
-          postToDatabase('orders', () => {sendSmsOnSuccess(params.body.phone, params.body.name)}, buildDatabasePayload(params.body))
-          .then(() => {
-            console.log(response);
-            onSuccess(response);
-          })
-      });
+    .then((response) => {
+        
+        postToDatabase('orders', () => {sendSmsOnSuccess(params.body.phone, params.body.name)}, buildDatabasePayload(params.body))
+        .then(() => {
+          console.log(response);
+          clearTimeout(timedOut);
+          onSuccess(response);
+        })
+    });
+
+    
   },
   [intents.UPDATE_ORDER]: params => doshii.Orders.update(params),
   [intents.CANCEL_ORDER]: (params, onSuccess) => cancelOrder(params, onSuccess),
