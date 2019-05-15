@@ -152,12 +152,13 @@ const orderingRouter = (services, router) => {
   // webhook registration process
   router.post("/ordering/webhook", (request, response, next) => {
     const { verify } = request.query;
+    console.log("##Webhook caught: ", request.query);
     orderingService.doshii_catch_webhook({
       context: {
         event: verify,
       },
       onSuccess: payload => {
-        console.log(payload);
+        
       },
       onFailure: next
     });
