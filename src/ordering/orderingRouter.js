@@ -45,6 +45,8 @@ const orderingRouter = (services, router) => {
     });
   });
 
+  // further doshii documentation at https://support.doshii.io/hc/en-us/categories/115000413493-Partner-App-API
+  // subscribes to a location with the provided locationId
   router.post("/ordering/doshii/:locationId/subscribe", (request, response, next) => {
     const { authorizationToken, requestId } = response.locals;
     const { locationId } = request.params;
@@ -59,6 +61,7 @@ const orderingRouter = (services, router) => {
     });
   });
 
+  // unsubscribes from a location with the provided locationId
   router.post("/ordering/doshii/:locationId/unsubscribe", (request, response, next) => {
     const { authorizationToken, requestId } = response.locals;
     const { locationId } = request.params
@@ -73,6 +76,8 @@ const orderingRouter = (services, router) => {
     });
   });
 
+  // Creates an order for the provided locationId
+  // Note: will also create transactions
   router.post("/ordering/:locationId/createOrder", (request, response, next) => {
     const { authorizationToken, requestId } = response.locals;
     const { locationId } = request.params
@@ -89,6 +94,7 @@ const orderingRouter = (services, router) => {
     });
   });
 
+  // Updates an order and its' transactions statuses to cancelled
   router.put("/ordering/doshii/:locationId/cancelOrder/:orderId", (request, response, next) => {
     const { authorizationToken, requestId } = response.locals;
     const { locationId, orderId } = request.params;
@@ -104,6 +110,7 @@ const orderingRouter = (services, router) => {
     });
   });
 
+  // creates a table checkin for the supplied locationId 
   router.post("/ordering/doshii/:locationId/createCheckin", (request, response, next) => {
     const { authorizationToken, requestId } = response.locals;
     const { locationId } = request.params
@@ -119,6 +126,9 @@ const orderingRouter = (services, router) => {
     });
   });
 
+  // suppose to cancel a checkin, but table verification can't be disabled
+  // see - https://sandbox-dashboard.doshii.io/docs/api/app#/Check-Ins/updateCheckin
+  // for possible fix
   router.put("/ordering/doshii/:locationId/cancelCheckin/:checkinId", (request, response, next) => {
     const { authorizationToken, requestId } = response.locals;
     const { locationId, checkinId } = request.params
@@ -135,13 +145,28 @@ const orderingRouter = (services, router) => {
     });
   });
 
+  // this route is called by the webhook whenever a event takes place
+  // Note: needs to be fleshed out with business logic to handle each event type 
+  //  and their respective payloads
+  // Also needs to respond with a hash from verify query string to complete the
+  // webhook registration process
   router.post("/ordering/webhook", (request, response, next) => {
-    console.log('did a thing here is teh body', request.body, 'and just incase', JSON.stringify(request.body));
     const { verify } = request.query;
-		console.log("TCL: orderingRouter -> verify", verify)
+    orderingService.doshii_catch_webhook({
+      context: {
+        event: verify,
+      },
+      onSuccess: payload => {
+        console.log(payload);
+      },
+      onFailure: next
+    });
+
     response.json(verify);
   });
   
+  // registers a webhook for the specified event type such as "order_created"
+  // also need to supply a route from the bff for the webhook to call on that event
   router.post("/ordering/createhook/:event", (request, response, next) => {
     const { event } = request.params;
     orderingService.doshii_create_webhook({
@@ -156,6 +181,7 @@ const orderingRouter = (services, router) => {
     });
   });
 
+  // deletes the webhook of a specified event type such as "order_created"
   router.delete("/ordering/cancelhook/:event", (request, response, next) => {
     const { event } = request.params;
     orderingService.doshii_delete_webhook({
@@ -169,10 +195,15 @@ const orderingRouter = (services, router) => {
     });
   });
 
-  // busted ask doshii peeps wuts up
-  router.get("/ordering/gethooks", (request, response, next) => {
+  // fetches an array containing information about all registered webhooks
+  // Note: registered webhooks apply globally to all locations
+  //  the locationId parameter is just required for the header in doshii-sdk
+  router.get("/ordering/gethooks/:locationId", (request, response, next) => {
+    const { locationId } = request.params;
     orderingService.doshii_get_webhook({
-      context: {},
+      context: {
+        doshiiLocationId: locationId,
+      },
       onSuccess: payload => {
         response.json(payload)
       },
