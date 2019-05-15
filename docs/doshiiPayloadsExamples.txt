@@ -1,0 +1,95 @@
+order payload
+  {
+    "name": "MrYum",
+    "email": "dev@mryum.com.au",
+    "doshiiLocationId": "8KXM0OD4",
+    "order": {
+        "type": "dinein",
+        "items": [{
+            "name": "Schnitzel Roll",
+            "quantity": "1",
+            "unitPrice": "200",
+            "type": "single",
+            "surcounts": [],
+            "options": [],
+            "totalBeforeSurcounts": "200",
+            "totalAfterSurcounts": "200",
+            "posId": "0000000026"
+        }],
+        "surcounts": []
+    },
+    "transactions": [{ 
+        "amount": "500",
+        "prepaid": "true",
+        "method": "credit",
+        "reference": "blaaaah"
+    }],
+    "consumer": {
+        "name": "MrYum",
+        "phone": "0423289668"
+    }
+}
+
+order with bundle items payload
+{
+    "name": "MrYum",
+    "email": "dev@mryum.com.au",
+    "doshiiLocationId": "8KXM0OD4",
+    "order": {
+        "type": "dinein",
+        "items": [{
+            "name": "Kids Meal",
+            "quantity": "1",
+            "unitPrice": "1500",
+            "type": "bundle",
+            "surcounts": [],
+            "options": [],
+            "totalBeforeSurcounts": "1500",
+            "totalAfterSurcounts": "1500",
+            "posId": "0000000276",
+            includedItems: [{
+               name: 'Toast',
+               posId: '0006583',
+               quantity: '1',
+               unitPrice: '400',
+               options: [],
+             }]
+        }],
+        "surcounts": []
+    },
+    "transactions": [{ 
+        "amount": "500",
+        "prepaid": "true",
+        "method": "credit",
+        "reference": "blaaaah"
+    }],
+    "consumer": {
+        "name": "MrYum",
+        "phone": "0423289668"
+    }
+}
+
+subscribe
+{
+    locationId: '8KXM0OD4'
+}
+
+unsubscribe
+{
+    locationId: '8KXM0OD4'
+}
+
+cancel order
+{
+  doshiiLocationId: '8KXM0OD4',
+  orderId: '127312'
+}
+
+create checkin
+{
+  doshiiLocationId: '8KXM0OD4',
+  tableNames: ['table5'],
+  ref: 'External checkin id from originating system',
+  covers: '3',
+  checkTables: false
+}
