@@ -1,7 +1,8 @@
 import doshiiConnector from '@mryum/doshii-sdk';
-import * as preprocessors from './preprocessors/doshiiPreprocessors.js';
-import sendSms from '../../util/sendSms.js';
+import * as preprocessors from '../preprocessors/doshiiPreprocessors.js';
+import sendSms from '../../../util/sendSms.js';
 import emojis from 'moji-translate';
+import * as intents from '../../../ordering/intents/doshiiIntents.js';
 
 const doshii = doshiiConnector({
     clientId: process.env.DOSHII_CLIENT_ID,
