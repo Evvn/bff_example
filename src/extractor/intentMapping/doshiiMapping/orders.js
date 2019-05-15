@@ -51,6 +51,7 @@ const cancelOrder = (params, onSuccess) => {
   };
 
 const buildDatabasePayload = (body) => {
+  console.log('build db', body);
   return {
     STRIPE_ID: body.stripeId,
     VENUE_NAME: body.venueName,
@@ -68,6 +69,7 @@ const orders = {
   [intents.RETRIEVE_ALL_ORDERS]: params => doshii.Orders.retrieveAll(params),
   [intents.RETRIEVE_ORDER]: params => doshii.Orders.retrieveOne(params),
   [intents.CREATE_ORDER]: (params, onSuccess) => {
+    try{
     const sendSmsOnSuccess = (phone, name) => {
       const message = `Hi ${name}, your order has been successfully placed. You will recieve a message when it is ready! `
       + emojis.translate('snowflake grin ice_skate pizza snowman');
@@ -94,6 +96,9 @@ const orders = {
           onSuccess(response);
         })
     });
+    } catch(error){
+      console.log(error);
+    }
 
     
   },
