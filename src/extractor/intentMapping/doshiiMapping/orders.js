@@ -4,6 +4,7 @@ import sendSms from '../../../util/sendSms.js';
 import { callDatabase, postToDatabase }  from '../../../util/callDatabase.js';
 import emojis from 'moji-translate';
 import * as intents from '../../../ordering/intents/doshiiIntents.js';
+import * as templates from '../../../enums/commonEnums.js';
 
 const doshii = doshiiConnector({
     clientId: process.env.DOSHII_CLIENT_ID,
