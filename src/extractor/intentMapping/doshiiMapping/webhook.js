@@ -63,7 +63,7 @@ const catchWebhook = payload => {
     }
   };
 	let ID = payload.order ? payload.order.DOSHII_ID : payload.data.id;
-  callDatabase(`orders/${ID}`, processOrder);
+  callDatabase(`db/orders/${ID}`, processOrder);
 };
 
 const webhook = {
