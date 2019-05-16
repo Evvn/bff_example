@@ -1,5 +1,6 @@
 import doshiiConnector from '@mryum/doshii-sdk';
 import * as intents from '../../../ordering/intents/doshiiIntents.js';
+import * as templates from '../../../enums/commonEnums.js';
 
 const doshii = doshiiConnector({
     clientId: process.env.DOSHII_CLIENT_ID,
