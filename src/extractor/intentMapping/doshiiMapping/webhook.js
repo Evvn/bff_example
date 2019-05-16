@@ -82,7 +82,7 @@ const webhook = {
     doshii.Webhooks.delete({ event: params.event }).then(result =>
       onSuccess(result)
     ),
-  ['CATCH_WEBHOOK']: (params, onSuccess) => {catchWebhook(params)}
+  ['CATCH_WEBHOOK']: (params, onSuccess) => {catchWebhook(params, onSuccess)}
 };
 
 export default webhook;
