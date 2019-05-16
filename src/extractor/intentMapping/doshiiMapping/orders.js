@@ -68,8 +68,8 @@ const buildDatabasePayload = (body, doshiiId) => {
 }
 
 const orders = {
-  [intents.RETRIEVE_ALL_ORDERS]: params => doshii.Orders.retrieveAll(params),
-  [intents.RETRIEVE_ORDER]: params => doshii.Orders.retrieveOne(params),
+  [intents.RETRIEVE_ALL_ORDERS]: (params, onSuccess) => doshii.Orders.retrieveAll({doshiiLocationId: params.doshiiLocationId}).then((response) => onSuccess(response)),
+  [intents.RETRIEVE_ORDER]: (params, onSuccess) => doshii.Orders.retrieveOne({doshiiLocationId: params.doshiiLocationId, orderId: params.orderId}).then((response) => onSuccess(response)),
   [intents.CREATE_ORDER]: (params, onSuccess) => {
     try{
     const sendSmsOnSuccess = (phone, name) => {

@@ -10,6 +10,8 @@ const doshiiTransformer = {
   createWebhook: data => data,
   deleteWebhook: data => data,
   getWebhooks: data => data,
+  getOrder: data => data,
+  getAllOrders: data => data,
 };
 
 export default doshiiTransformer;

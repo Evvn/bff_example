@@ -81,6 +81,7 @@ const orderingRouter = (services, router) => {
   router.post("/ordering/:locationId/createOrder", (request, response, next) => {
     const { authorizationToken, requestId } = response.locals;
     const { locationId } = request.params
+	  console.log(request.body);
     orderingService.doshii_createOrder({
       context: {
         doshiiLocationId: locationId,
@@ -98,6 +99,36 @@ const orderingRouter = (services, router) => {
     const { authorizationToken, requestId } = response.locals;
     const { locationId, orderId } = request.params;
     orderingService.doshii_cancelOrder({
+      context: {
+        doshiiLocationId: locationId,
+        orderId: orderId
+      },
+      onSuccess: payload => {
+        response.json(payload);
+      },
+      onFailure: next
+    });
+  });
+
+
+  router.get("/ordering/doshii/:locationId/orders", (request, response, next) => {
+    const { authorizationToken, requestId } = response.locals;
+    const { locationId, orderId } = request.params;
+    orderingService.doshii_getAllOrders({
+      context: {
+        doshiiLocationId: locationId,
+      },
+      onSuccess: payload => {
+        response.json(payload);
+      },
+      onFailure: next
+    });
+  });
+
+  router.get("/ordering/doshii/:locationId/order/:orderId", (request, response, next) => {
+    const { authorizationToken, requestId } = response.locals;
+    const { locationId, orderId } = request.params;
+    orderingService.doshii_getOrder({
       context: {
         doshiiLocationId: locationId,
         orderId: orderId
