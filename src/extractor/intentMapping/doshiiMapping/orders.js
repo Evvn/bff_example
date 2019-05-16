@@ -79,7 +79,7 @@ const orders = {
         createOrderPreprocess(params.body, params.doshiiLocationId)
       ).then(response => {
         postToDatabase(
-          "db/orders",
+          "db/orders", () => {},
           buildDatabasePayload(params.body, response.id)
         ).then(() => {
           clearTimeout(timedOut);
