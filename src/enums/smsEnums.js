@@ -1,5 +1,5 @@
 import sendSms from "../util/sendSms.js";
-import emojis from "emoji-translate";
+import emojis from "moji-translate";
 
 export const sendOrderSuccessSms = (name, phone) => {
   const message =

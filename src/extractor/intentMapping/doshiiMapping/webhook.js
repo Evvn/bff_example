@@ -4,6 +4,7 @@ import sendSms from "../../../util/sendSms.js";
 import * as templates from "../../../enums/commonEnums.js";
 import { callDatabase } from "../../../util/callDatabase.js";
 import * as sms from "../../../enums/smsEnums.js";
+import * as orderCommands from './orders.js';
 
 const doshii = doshiiConnector({
   clientId: process.env.DOSHII_CLIENT_ID,
@@ -15,7 +16,7 @@ const doshii = doshiiConnector({
 
 const catchWebhook = payload => {
   const { event, data } = payload;
-  const { status, id } = data;
+  const { status, id, locationId } = data;
 
   processOrder = order => {
     if (event === "order_updated") {
@@ -45,28 +46,18 @@ const catchWebhook = payload => {
           );
         });
       }
-<<<<<<< HEAD
     } else if (event === "pending_timeout") {
       if (order.STATUS === "pending") {
         postToDatabase(`orders/updateStatus/${id}`, () => {}, {
           STATUS: "canceled"
         }).then(() => {
           // cancel doshii order
+          orderCommands['CANCEL_ORDER']({orderId: id, doshiiLocationId: locationId, status: 'cancelled'});
           // issue refund - ask AVC, eftpos refund option?
           // send refund order (negative balance for reconciliation)
           // send failure text
           sms.sendOrderFailureSms(order.CUSTOMER_NAME, order.CUSTOMER_PHONE);
         });
-=======
-    }
-    else if(event === 'pending_timeout'){
-      if(order.STATUS === 'pending'){
-        postToDatabase(`orders/updateStatus/${id}`, ()=>{}, {STATUS: 'cancelled'})
-          .then(() => {
-            // cancel doshii order
-            // send failure text
-          })
->>>>>>> 1f4577c0d0f8834f07ae3a196c94dc5cd9dde64f
       }
     }
   };
