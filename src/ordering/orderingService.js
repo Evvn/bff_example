@@ -7,6 +7,8 @@ import {
 import {
   SUBSCRIBE_LOCATION,
   UNSUBSCRIBE_LOCATION,
+  RETRIEVE_ALL_ORDERS,
+  RETRIEVE_ORDER,
   CREATE_ORDER,
   CANCEL_ORDER,
   CREATE_CHECKIN,
@@ -87,6 +89,27 @@ const orderingService = ({ doshiiTransformer, orderMenuTransformer }, extractor)
       context,
       onSuccess: payload => {
         onSuccess(doshiiTransformer.createOrder(payload));
+      },
+      onFailure
+    });
+  };
+
+  const doshii_getAllOrders = ({ context, onSuccess, onFailure }) => {
+    extractor.readMany({
+      intents: [RETRIEVE_ALL_ORDERS],
+      context,
+      onSuccess: payload => {
+        onSuccess(doshiiTransformer.getAllOrders(payload));
+      },
+      onFailure
+    });
+  };
+  const doshii_getOrder = ({ context, onSuccess, onFailure }) => {
+    extractor.readMany({
+      intents: [RETRIEVE_ORDER],
+      context,
+      onSuccess: payload => {
+        onSuccess(doshiiTransformer.getOrder(payload));
       },
       onFailure
     });
@@ -177,6 +200,8 @@ const orderingService = ({ doshiiTransformer, orderMenuTransformer }, extractor)
     doshii_SubscribeLocation,
     doshii_UnsubscribeLocation,
     doshii_createOrder,
+    doshii_getAllOrders,
+    doshii_getOrder,
     doshii_cancelOrder,
     doshii_createCheckin,
     doshii_cancelCheckin,

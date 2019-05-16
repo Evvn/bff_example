@@ -110,6 +110,36 @@ const orderingRouter = (services, router) => {
     });
   });
 
+
+  router.get("/ordering/doshii/:locationId/orders", (request, response, next) => {
+    const { authorizationToken, requestId } = response.locals;
+    const { locationId, orderId } = request.params;
+    orderingService.doshii_getAllOrders({
+      context: {
+        doshiiLocationId: locationId,
+      },
+      onSuccess: payload => {
+        response.json(payload);
+      },
+      onFailure: next
+    });
+  });
+
+  router.get("/ordering/doshii/:locationId/order/:orderId", (request, response, next) => {
+    const { authorizationToken, requestId } = response.locals;
+    const { locationId, orderId } = request.params;
+    orderingService.doshii_getOrder({
+      context: {
+        doshiiLocationId: locationId,
+        orderId: orderId
+      },
+      onSuccess: payload => {
+        response.json(payload);
+      },
+      onFailure: next
+    });
+  });
+
   // creates a table checkin for the supplied locationId 
   router.post("/ordering/doshii/:locationId/createCheckin", (request, response, next) => {
     const { authorizationToken, requestId } = response.locals;
