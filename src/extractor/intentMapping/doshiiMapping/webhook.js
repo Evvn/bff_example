@@ -2,6 +2,7 @@ import doshiiConnector from '@mryum/doshii-sdk';
 import * as intents from '../../../ordering/intents/doshiiIntents.js';
 import sendSms from '../../../util/sendSms.js';
 import * as templates from '../../../enums/commonEnums.js';
+import { callDatabase } from '../../../util/callDatabase.js';
 
 
 const doshii = doshiiConnector({
@@ -12,11 +13,27 @@ const doshii = doshiiConnector({
     silent: false
   });
 
-const catchWebhook = (event) => {
-  console.log(event);
-  /*if(event === 'order_updated'){
-    sendSms('+61413206203', 'EV', 'orderUpdated')
-  }*/
+const catchWebhook = (payload) => {
+  const { event, data } = payload;
+  const { status, id } = data;
+
+  processOrder = (order) => {
+    if(event === 'order_updated'){
+      if(status === 'accepted'){
+        //send successfully placed text
+      }
+      else if(status === 'rejected'){
+        //send failure text
+      }
+    }
+    else if(event === 'pending_timeout'){
+      postToDatabase(`orders/updateStatus/${id}`)
+    }
+  };
+
+  callDatabase(`orders/${id}`, processOrder);
+  
+  
 }
 
 const webhook = {

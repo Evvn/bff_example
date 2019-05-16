@@ -67,22 +67,24 @@ const buildDatabasePayload = (body, doshiiId) => {
   };
 }
 
+const sendSmsOnSuccess = (phone, name) => {
+  const message = `Hi ${name}, your order has been successfully placed. You will recieve a message when it is ready! `
+  + emojis.translate('snowflake grin ice_skate pizza snowman');
+  sendSms(phone, message, () => {});
+}
+
+const sendSmsOnFailure = (phone, name) => {
+  const message = `Hi ${name}, your order has NOT been successfully placed.`
+  + emojis.translate('snowflake grin ice_skate pizza snowman');
+  sendSms(phone, message, () => {});
+}
+
 const orders = {
   [intents.RETRIEVE_ALL_ORDERS]: (params, onSuccess) => doshii.Orders.retrieveAll({doshiiLocationId: params.doshiiLocationId}).then((response) => onSuccess(response)),
   [intents.RETRIEVE_ORDER]: (params, onSuccess) => doshii.Orders.retrieveOne({doshiiLocationId: params.doshiiLocationId, orderId: params.orderId}).then((response) => onSuccess(response)),
   [intents.CREATE_ORDER]: (params, onSuccess) => {
     try{
-    const sendSmsOnSuccess = (phone, name) => {
-      const message = `Hi ${name}, your order has been successfully placed. You will recieve a message when it is ready! `
-      + emojis.translate('snowflake grin ice_skate pizza snowman');
-      sendSms(phone, message, () => {});
-    }
-    
-    const sendSmsOnFailure = (phone, name) => {
-      const message = `Hi ${name}, your order has NOT been successfully placed. You will recieve a message when it is ready! `
-      + emojis.translate('snowflake grin ice_skate pizza snowman');
-      sendSms(phone, message, () => {});
-    }
+   
 
     const timedOut = setTimeout(() => {
       sendSmsOnFailure(params.body.phone, params.body.name);
@@ -90,15 +92,15 @@ const orders = {
 
     doshii.Orders.create(createOrderPreprocess(params.body, params.doshiiLocationId))
     .then((response) => {
-        postToDatabase('db/orders', () => {sendSmsOnSuccess(params.body.phone, params.body.name)}, buildDatabasePayload(params.body, response.id))
+        postToDatabase('db/orders', buildDatabasePayload(params.body, response.id))
         .then(() => {
-          
           clearTimeout(timedOut);
           onSuccess(response);
         })
     });
     } catch(error){
       console.log(error);
+      sendSmsOnFailure(params.body.phone, params.body.name);
     }
 
     
