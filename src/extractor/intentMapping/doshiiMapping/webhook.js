@@ -50,10 +50,10 @@ const catchWebhook = payload => {
       const { STATUS, DOSHII_ID, DOSHII_LOCATION_ID } = payload.order;
       if (order.STATUS === "pending") {
         postToDatabase(`db/orders/updateStatus/${DOSHII_ID}`, () => {}, {
-          STATUS: "canceled"
+          STATUS: "cancelled"
         }).then(() => {
           // cancel doshii order
-          orderCommands[['CANCEL_ORDER']]({orderId: DOSHII_ID, doshiiLocationId: DOSHII_LOCATION_ID, status: 'cancelled'});
+          orderCommands['CANCEL_ORDER']({orderId: DOSHII_ID, doshiiLocationId: DOSHII_LOCATION_ID, status: 'cancelled'});
           // issue refund - ask AVC, eftpos refund option?
           // send refund order (negative balance for reconciliation)
           // send failure text
