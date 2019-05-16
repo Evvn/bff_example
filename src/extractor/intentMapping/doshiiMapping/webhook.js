@@ -57,7 +57,7 @@ const catchWebhook = (payload, onSuccess) => {
           orderCommands['CANCEL_ORDER']({orderId: DOSHII_ID, doshiiLocationId: DOSHII_LOCATION_ID, status: 'cancelled'}, ()=>{});
           // issue refund - ask AVC, eftpos refund option?
           // send refund order (negative balance for reconciliation)
-          transactionCommands['CREATE_TRANSACTION']({orderId: DOSHII_ID, doshiiLocationId: DOSHII_LOCATION_ID, type: 'refund', amount: parseInt(order.ORDER_TOTAL) * -1}, ()=>{ console.log('refund son!!')});
+          transactionCommands['CREATE_TRANSACTION']({orderId: DOSHII_ID, amount: parseInt(order.ORDER_TOTAL) * -1}, ()=>{ console.log('refund placed')});
           // send failure text
           sms.sendOrderFailureSms(order.CUSTOMER_NAME, order.CUSTOMER_PHONE);
         });
