@@ -52,7 +52,7 @@ const cancelOrder = (params, onSuccess) => {
   };
 
 const buildDatabasePayload = (body, doshiiId) => {
-  console.log('build db', body);
+  console.log('build db', body, doshiiId);
   return {
     STRIPE_ID: body.stripeId,
     DOSHII_ID: doshiiId,
