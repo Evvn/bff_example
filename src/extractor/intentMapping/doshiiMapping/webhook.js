@@ -4,7 +4,7 @@ import sendSms from "../../../util/sendSms.js";
 import * as templates from "../../../enums/commonEnums.js";
 import { callDatabase, postToDatabase } from "../../../util/callDatabase.js";
 import * as sms from "../../../enums/smsEnums.js";
-import * as orderCommands from './orders.js';
+import orderCommands from './orders.js';
 
 const doshii = doshiiConnector({
   clientId: process.env.DOSHII_CLIENT_ID,
