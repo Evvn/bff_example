@@ -64,20 +64,11 @@ const buildDatabasePayload = (body, doshiiId) => {
     CLIENT_TYPE: body.clientType,
     REDEMPTION_CODE: body.redemptionCode,
     ORDER_TOTAL: body.orderTotal,
-    STATUS: "PENDING"
+    STATUS: "pending"
   };
 };
 
 const orders = {
-  [intents.RETRIEVE_ALL_ORDERS]: (params, onSuccess) =>
-    doshii.Orders.retrieveAll({
-      doshiiLocationId: params.doshiiLocationId
-    }).then(response => onSuccess(response)),
-  [intents.RETRIEVE_ORDER]: (params, onSuccess) =>
-    doshii.Orders.retrieveOne({
-      doshiiLocationId: params.doshiiLocationId,
-      orderId: params.orderId
-    }).then(response => onSuccess(response)),
   [intents.CREATE_ORDER]: (params, onSuccess) => {
     try {
       const timedOut = setTimeout(() => {
@@ -105,7 +96,16 @@ const orders = {
   [intents.RETRIEVE_ORDER_TRANSACTIONS]: params =>
     doshii.Orders.retrieveTransactions(params),
   [intents.CREATE_ORDER_TRANSACTION]: params =>
-    doshii.Orders.createTransaction(params)
+    doshii.Orders.createTransaction(params),
+  [intents.RETRIEVE_ALL_ORDERS]: (params, onSuccess) =>
+    doshii.Orders.retrieveAll({
+      doshiiLocationId: params.doshiiLocationId
+    }).then(response => onSuccess(response)),
+  [intents.RETRIEVE_ORDER]: (params, onSuccess) =>
+    doshii.Orders.retrieveOne({
+      doshiiLocationId: params.doshiiLocationId,
+      orderId: params.orderId
+    }).then(response => onSuccess(response))
 };
 
 export default orders;
