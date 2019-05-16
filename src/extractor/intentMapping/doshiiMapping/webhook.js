@@ -2,7 +2,7 @@ import doshiiConnector from "@mryum/doshii-sdk";
 import * as intents from "../../../ordering/intents/doshiiIntents.js";
 import sendSms from "../../../util/sendSms.js";
 import * as templates from "../../../enums/commonEnums.js";
-import { callDatabase } from "../../../util/callDatabase.js";
+import { callDatabase, postToDatabase } from "../../../util/callDatabase.js";
 import * as sms from "../../../enums/smsEnums.js";
 import * as orderCommands from './orders.js';
 
