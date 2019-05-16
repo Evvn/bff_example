@@ -16,7 +16,7 @@ const doshii = doshiiConnector({
 
 const catchWebhook = payload => {
   const { event } = payload;
-  processOrder = order => {
+  const processOrder = order => {
     console.log(order);
     if (event === "order_updated") {
 	    const { status, id, locationId } = payload.data;
