@@ -208,7 +208,8 @@ const orderingRouter = (services, router) => {
         webhookUrl: 'https://api.mryumqa.com.au:5000/yumbff/ordering/webhook'
       },
       onSuccess: payload => {
-        response.json(payload)
+        console.log('payload: ', payload);
+        response.send('Success');
       },
       onFailure: next
     });
