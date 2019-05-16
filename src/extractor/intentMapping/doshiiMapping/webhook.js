@@ -49,7 +49,7 @@ const catchWebhook = payload => {
     } else if (event === "pending_timeout") {
       const { STATUS, DOSHII_ID, LOCATION_ID } = payload.order;
       if (order.STATUS === "pending") {
-        postToDatabase(`orders/updateStatus/${id}`, () => {}, {
+        postToDatabase(`orders/updateStatus/${DOSHII_ID}`, () => {}, {
           STATUS: "canceled"
         }).then(() => {
           // cancel doshii order
