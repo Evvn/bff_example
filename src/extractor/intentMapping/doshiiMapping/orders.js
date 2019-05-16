@@ -63,7 +63,7 @@ const buildDatabasePayload = (body, doshiiId) => {
     CLIENT_TYPE: body.clientType,
     REDEMPTION_CODE: body.redemptionCode,
     ORDER_TOTAL: body.orderTotal,
-    STATUS: 'PENDING',
+    STATUS: 'pending',
   };
 }
 
@@ -80,35 +80,33 @@ const sendSmsOnFailure = (phone, name) => {
 }
 
 const orders = {
-  [intents.RETRIEVE_ALL_ORDERS]: (params, onSuccess) => doshii.Orders.retrieveAll({doshiiLocationId: params.doshiiLocationId}).then((response) => onSuccess(response)),
-  [intents.RETRIEVE_ORDER]: (params, onSuccess) => doshii.Orders.retrieveOne({doshiiLocationId: params.doshiiLocationId, orderId: params.orderId}).then((response) => onSuccess(response)),
   [intents.CREATE_ORDER]: (params, onSuccess) => {
     try{
-   
+      const timedOut = setTimeout(() => {
+        sendSmsOnFailure(params.body.phone, params.body.name);
+      }, 20000);
 
-    const timedOut = setTimeout(() => {
-      sendSmsOnFailure(params.body.phone, params.body.name);
-    }, 20000);
-
-    doshii.Orders.create(createOrderPreprocess(params.body, params.doshiiLocationId))
-    .then((response) => {
-        postToDatabase('db/orders', buildDatabasePayload(params.body, response.id))
-        .then(() => {
-          clearTimeout(timedOut);
-          onSuccess(response);
-        })
-    });
-    } catch(error){
-      console.log(error);
-      sendSmsOnFailure(params.body.phone, params.body.name);
-    }
-
-    
-  },
+      doshii.Orders.create(createOrderPreprocess(params.body, params.doshiiLocationId))
+      .then((response) => {
+          postToDatabase('db/orders', buildDatabasePayload(params.body, response.id))
+          .then(() => {
+            clearTimeout(timedOut);
+            onSuccess(response);
+          })
+      });
+      } catch(error){
+        console.log(error);
+        sendSmsOnFailure(params.body.phone, params.body.name);
+      }
+    },
   [intents.UPDATE_ORDER]: params => doshii.Orders.update(params),
   [intents.CANCEL_ORDER]: (params, onSuccess) => cancelOrder(params, onSuccess),
   [intents.RETRIEVE_ORDER_TRANSACTIONS]: params => doshii.Orders.retrieveTransactions(params),
   [intents.CREATE_ORDER_TRANSACTION]: params => doshii.Orders.createTransaction(params),
+  [intents.RETRIEVE_ALL_ORDERS]: (params, onSuccess) => doshii.Orders.retrieveAll({doshiiLocationId: params.doshiiLocationId})
+    .then((response) => onSuccess(response)),
+  [intents.RETRIEVE_ORDER]: (params, onSuccess) => doshii.Orders.retrieveOne({doshiiLocationId: params.doshiiLocationId, orderId: params.orderId})
+    .then((response) => onSuccess(response)),
 };
 
 export default orders;
