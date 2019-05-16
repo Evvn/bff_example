@@ -16,15 +16,10 @@ const doshii = doshiiConnector({
 
 const catchWebhook = payload => {
   const { event } = payload;
-  const { id, locationId } = data;
-  const status = data ? data.status : payload.status;
-console.log('catch');
   processOrder = order => {
-	  console.log(order)
+    console.log(order);
     if (event === "order_updated") {
 	    const { status, id, locationId } = payload.data;
-  const { id, locationId } = data;
-	    console.log('order-up')
       if (status === "accepted") {
         postToDatabase(`orders/updateStatus/${id}`, () => {}, {
           STATUS: status
@@ -52,14 +47,13 @@ console.log('catch');
         });
       }
     } else if (event === "pending_timeout") {
+      const { STATUS, DOSHII_ID, LOCATION_ID } = payload.order;
       if (order.STATUS === "pending") {
-	      console.log('here')
-	       const { status, DOSHII_ID, locationId } = payload.data;
         postToDatabase(`orders/updateStatus/${id}`, () => {}, {
           STATUS: "canceled"
         }).then(() => {
           // cancel doshii order
-          orderCommands['CANCEL_ORDER']({orderId: id, doshiiLocationId: locationId, status: 'cancelled'});
+          orderCommands['CANCEL_ORDER']({orderId: DOSHII_ID, doshiiLocationId: DOSHII_LOCATION_ID, status: 'cancelled'});
           // issue refund - ask AVC, eftpos refund option?
           // send refund order (negative balance for reconciliation)
           // send failure text

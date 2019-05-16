@@ -53,10 +53,11 @@ const cancelOrder = (params, onSuccess) => {
   });
 };
 
-const buildDatabasePayload = (body, doshiiId) => {
+const buildDatabasePayload = (body, doshiiId, doshiiLocationId) => {
   return {
     STRIPE_ID: body.stripeId,
     DOSHII_ID: doshiiId,
+    DOSHII_LOCATION_ID: doshiiLocationId,
     VENUE_NAME: body.venueName,
     ITEMS: JSON.stringify(body.items),
     CUSTOMER_NAME: body.name,
@@ -80,7 +81,7 @@ const orders = {
       ).then(response => {
         postToDatabase(
           "db/orders", () => {},
-          buildDatabasePayload(params.body, response.id)
+          buildDatabasePayload(params.body, response.id, params.doshiiLocationId)
         ).then(() => {
           clearTimeout(timedOut);
           onSuccess(response);
