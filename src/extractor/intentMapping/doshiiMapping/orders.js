@@ -90,10 +90,10 @@ const orders = {
 
     doshii.Orders.create(createOrderPreprocess(params.body, params.doshiiLocationId))
     .then((response) => {
-        
+      console.log(response.id);
         postToDatabase('db/orders', () => {sendSmsOnSuccess(params.body.phone, params.body.name)}, buildDatabasePayload(params.body, response.id))
         .then(() => {
-          console.log(response);
+          
           clearTimeout(timedOut);
           onSuccess(response);
         })
