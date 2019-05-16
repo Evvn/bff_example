@@ -15,11 +15,16 @@ const doshii = doshiiConnector({
 });
 
 const catchWebhook = payload => {
-  const { event, data } = payload;
-  const { status, id, locationId } = data;
-
+  const { event } = payload;
+  const { id, locationId } = data;
+  const status = data ? data.status : payload.status;
+console.log('catch');
   processOrder = order => {
+	  console.log(order)
     if (event === "order_updated") {
+	    const { status, id, locationId } = payload.data;
+  const { id, locationId } = data;
+	    console.log('order-up')
       if (status === "accepted") {
         postToDatabase(`orders/updateStatus/${id}`, () => {}, {
           STATUS: status
@@ -48,6 +53,8 @@ const catchWebhook = payload => {
       }
     } else if (event === "pending_timeout") {
       if (order.STATUS === "pending") {
+	      console.log('here')
+	       const { status, DOSHII_ID, locationId } = payload.data;
         postToDatabase(`orders/updateStatus/${id}`, () => {}, {
           STATUS: "canceled"
         }).then(() => {
@@ -61,7 +68,7 @@ const catchWebhook = payload => {
       }
     }
   };
-
+	console.log('in webhook')
   callDatabase(`orders/${id}`, processOrder);
 };
 
@@ -81,7 +88,7 @@ const webhook = {
     doshii.Webhooks.delete({ event: params.event }).then(result =>
       onSuccess(result)
     ),
-  [intents.CATCH_WEBHOOK]: (params, onSuccess) => catchWebhook(params)
+  ['CATCH_WEBHOOK']: (params, onSuccess) => {catchWebhook(params)}
 };
 
 export default webhook;
