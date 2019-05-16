@@ -45,7 +45,6 @@ const catchWebhook = payload => {
           );
         });
       }
-<<<<<<< HEAD
     } else if (event === "pending_timeout") {
       if (order.STATUS === "pending") {
         postToDatabase(`orders/updateStatus/${id}`, () => {}, {
@@ -57,16 +56,6 @@ const catchWebhook = payload => {
           // send failure text
           sms.sendOrderFailureSms(order.CUSTOMER_NAME, order.CUSTOMER_PHONE);
         });
-=======
-    }
-    else if(event === 'pending_timeout'){
-      if(order.STATUS === 'pending'){
-        postToDatabase(`orders/updateStatus/${id}`, ()=>{}, {STATUS: 'cancelled'})
-          .then(() => {
-            // cancel doshii order
-            // send failure text
-          })
->>>>>>> 1f4577c0d0f8834f07ae3a196c94dc5cd9dde64f
       }
     }
   };
