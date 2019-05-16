@@ -198,6 +198,24 @@ const orderingRouter = (services, router) => {
 
     response.json(verify);
   });
+
+  router.post("/ordering/webhook/self", (request, response, next) => {
+    const { verify } = request.query;
+	  console.log(request.body)
+    const body = request.body.body ? request.body.body : request.body
+    console.log("##Webhook caught: ", body);
+    orderingService.doshii_catch_webhook({
+      context: {
+        ...body
+      },
+      onSuccess: payload => {
+       response.json(payload);
+      },
+      onFailure: next
+    });
+
+    response.json(verify);
+  });
   
   // registers a webhook for the specified event type such as "order_created"
   // also need to supply a route from the bff for the webhook to call on that event
