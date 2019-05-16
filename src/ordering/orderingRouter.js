@@ -190,7 +190,8 @@ const orderingRouter = (services, router) => {
         ...body
       },
       onSuccess: payload => {
-       response.json(payload);
+        console.log('payload:', payload);
+       //response.json(payload);
       },
       onFailure: next
     });
