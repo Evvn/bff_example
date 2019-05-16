@@ -47,12 +47,12 @@ const cancelOrder = (params, onSuccess) => {
           })
         }
       })
+      console.log(result);
       onSuccess(result);
     });
   };
 
 const buildDatabasePayload = (body, doshiiId) => {
-  console.log('build db', body, doshiiId);
   return {
     STRIPE_ID: body.stripeId,
     DOSHII_ID: doshiiId,
@@ -90,7 +90,6 @@ const orders = {
 
     doshii.Orders.create(createOrderPreprocess(params.body, params.doshiiLocationId))
     .then((response) => {
-      console.log(response.id);
         postToDatabase('db/orders', () => {sendSmsOnSuccess(params.body.phone, params.body.name)}, buildDatabasePayload(params.body, response.id))
         .then(() => {
           

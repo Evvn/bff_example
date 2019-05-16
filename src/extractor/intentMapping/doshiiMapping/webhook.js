@@ -14,9 +14,9 @@ const doshii = doshiiConnector({
 
 const catchWebhook = (event) => {
   console.log(event);
-  if(event === 'order_updated'){
+  /*if(event === 'order_updated'){
     sendSms('+61413206203', 'EV', 'orderUpdated')
-  }
+  }*/
 }
 
 const webhook = {
@@ -24,7 +24,7 @@ const webhook = {
     [intents.CREATE_WEBHOOKS]: (params, onSuccess) => doshii.Webhooks.create({event: params.event, webhookUrl: params.webhookUrl}).then((result) => onSuccess(result)),
     [intents.UPDATE_WEBHOOKS]: (params, onSuccess) => doshii.Webhooks.update({event: params.event, webhookUrl: params.webhookUrl}).then((result) => onSuccess(result)),
     [intents.DELETE_WEBHOOKS]: (params, onSuccess) => doshii.Webhooks.delete({event: params.event}).then((result) => onSuccess(result)),
-    [intents.CATCH_WEBHOOK]: (params, onSuccess) => catchWebhook(params.event)
+    [intents.CATCH_WEBHOOK]: (params, onSuccess) => catchWebhook(params)
   }
 
   export default webhook;
