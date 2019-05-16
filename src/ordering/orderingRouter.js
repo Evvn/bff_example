@@ -190,7 +190,7 @@ const orderingRouter = (services, router) => {
         ...body
       },
       onSuccess: payload => {
-       response.payload(success);
+       response.json(payload);
       },
       onFailure: next
     });
