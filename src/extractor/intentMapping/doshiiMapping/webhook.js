@@ -14,7 +14,7 @@ const doshii = doshiiConnector({
   silent: false
 });
 
-const catchWebhook = payload => {
+const catchWebhook = (payload, onSuccess) => {
   const { event } = payload;
   const processOrder = order => {
     console.log(order);
@@ -53,7 +53,7 @@ const catchWebhook = payload => {
           STATUS: "cancelled"
         }).then(() => {
           // cancel doshii order
-          orderCommands['CANCEL_ORDER']({orderId: DOSHII_ID, doshiiLocationId: DOSHII_LOCATION_ID, status: 'cancelled'});
+          orderCommands['CANCEL_ORDER']({orderId: DOSHII_ID, doshiiLocationId: DOSHII_LOCATION_ID, status: 'cancelled'}, onSuccess);
           // issue refund - ask AVC, eftpos refund option?
           // send refund order (negative balance for reconciliation)
           // send failure text
