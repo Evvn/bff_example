@@ -27,7 +27,13 @@ const catchWebhook = (payload) => {
       }
     }
     else if(event === 'pending_timeout'){
-      postToDatabase(`orders/updateStatus/${id}`)
+      if(order.STATUS === 'pending'){
+        postToDatabase(`orders/updateStatus/${id}`, ()=>{}, {STATUS: 'canceled'})
+          .then(() => {
+            // cancel doshii order
+            // send failure text
+          })
+      }
     }
   };
 
