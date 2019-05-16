@@ -5,6 +5,7 @@ import * as templates from "../../../enums/commonEnums.js";
 import { callDatabase, postToDatabase } from "../../../util/callDatabase.js";
 import * as sms from "../../../enums/smsEnums.js";
 import orderCommands from './orders.js';
+import transactionCommands from './transactions.js';
 
 const doshii = doshiiConnector({
   clientId: process.env.DOSHII_CLIENT_ID,
@@ -53,9 +54,10 @@ const catchWebhook = (payload, onSuccess) => {
           STATUS: "cancelled"
         }).then(() => {
           // cancel doshii order
-          orderCommands['CANCEL_ORDER']({orderId: DOSHII_ID, doshiiLocationId: DOSHII_LOCATION_ID, status: 'cancelled'}, onSuccess);
+          orderCommands['CANCEL_ORDER']({orderId: DOSHII_ID, doshiiLocationId: DOSHII_LOCATION_ID, status: 'cancelled'}, ()=>{});
           // issue refund - ask AVC, eftpos refund option?
           // send refund order (negative balance for reconciliation)
+          transactionCommands['CREATE_TRANSACTION']({orderId: DOSHII_ID, doshiiLocationId: DOSHII_LOCATION_ID, type: 'refund', amount: parseInt(order.ORDER_TOTAL) * -1}, ()=>{});
           // send failure text
           sms.sendOrderFailureSms(order.CUSTOMER_NAME, order.CUSTOMER_PHONE);
         });

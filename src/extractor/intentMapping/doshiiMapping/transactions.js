@@ -13,6 +13,8 @@ const doshii = doshiiConnector({
 
 const transactions = {
     [intents.RETRIEVE_TRANSACTION]: params => doshii.Tables.retrieveOne(params),
-    [intents.CREATE_TRANSACTION]: params => doshii.Tables.create(params),
+    [intents.CREATE_TRANSACTION]: (params, onSuccess) => doshii.Tables.create(params).then((response) => onSuccess(response)),
     [intents.UPDATE_TRANSACTION]: params => doshii.Tables.update(params),
   };
+
+export default transactions;
