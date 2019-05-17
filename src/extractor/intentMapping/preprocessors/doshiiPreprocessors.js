@@ -38,7 +38,7 @@ export const createOrderPreprocess = (rawOrders, doshiiLocationId) => {
             let variantAddition = 0;
             const variants = !item.addOns ? [] : item.addOns
                 .map(addon => {
-                    variantAddition = variantAddition +  addon.price;
+                    variantAddition = variantAddition + 80; //addon.price;
                     return {
                         name: 'vego', //addon.name,
                         posId: '000022',//addon.DOSHII_POS_ID,
