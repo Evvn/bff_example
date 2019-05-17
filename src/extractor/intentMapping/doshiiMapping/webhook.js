@@ -59,7 +59,7 @@ const catchWebhook = (payload, onSuccess) => {
           orderCommands['RETRIEVE_ORDER']({doshiiLocationId: DOSHII_LOCATION_ID, orderId: DOSHII_ID}, (res) => { og_transaction_id = res.transactions[0].id});
           // issue refund - ask AVC, eftpos refund option?
           // send refund order (negative balance for reconciliation)
-          transactionCommands['CREATE_TRANSACTION']({orderId: DOSHII_ID, doshiiLocationId: DOSHII_LOCATION_ID, method: 'cash', prepaid: true, linkedTrxId: og_transaction_id, amount: parseInt(order.ORDER_TOTAL) * -1}, ()=>{ console.log('refund placed')});
+          transactionCommands['CREATE_TRANSACTION']({orderId: DOSHII_ID, doshiiLocationId: DOSHII_LOCATION_ID, method: 'cash', prepaid: true, linkedTrxId: og_transaction_id, reference: og_transaction_id, amount: parseInt(order.ORDER_TOTAL) * -1}, ()=>{ console.log('refund placed')});
           // send failure text
           sms.sendOrderFailureSms(order.CUSTOMER_NAME, order.CUSTOMER_PHONE);
         });
