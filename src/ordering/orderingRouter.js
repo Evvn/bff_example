@@ -228,7 +228,7 @@ const orderingRouter = (services, router) => {
       },
       onSuccess: payload => {
         console.log('payload: ', payload);
-        response.send('Success');
+        response.json(payload);
       },
       onFailure: next
     });
