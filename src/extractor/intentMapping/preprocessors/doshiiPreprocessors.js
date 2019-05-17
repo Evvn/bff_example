@@ -32,9 +32,9 @@ export const createOrderPreprocess = (rawOrders, doshiiLocationId) => {
         externalOrderRef: stripeId,
         type: clientType,
         surcounts: [],
-        items: Object.keys(items).map(itemKey => {
+        items: items.map(item => {
+            console.log(item)
             const { ORDER_ITEM } = createOrder;
-            const item = items[itemKey];
             const options = !item.addOns ? [] : item.addOns;
             //     .map(addon => {
             //         options: []
