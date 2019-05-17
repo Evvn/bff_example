@@ -35,7 +35,7 @@ export const createOrderPreprocess = (rawOrders, doshiiLocationId) => {
         items: Object.keys(items).map(itemKey => {
             const { ORDER_ITEM } = createOrder;
             const item = items[itemKey];
-            const options = !item.addOns ? [] : //item.addOns
+            const options = //!item.addOns ? [] : //item.addOns
                 //.map(addon => {
                     [{
                         name: 'Postmix Modifiers', //addon.name,
