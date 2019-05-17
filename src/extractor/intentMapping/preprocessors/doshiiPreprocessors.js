@@ -51,7 +51,7 @@ export const createOrderPreprocess = (rawOrders, doshiiLocationId) => {
             ORDER_ITEM.unitPrice = item.price;
             ORDER_ITEM.totalBeforeSurcounts = item.price;
             ORDER_ITEM.totalAfterSurcounts = item.price;
-            ORDER_ITEM.posId = '0000000026' //item.DOSHII_POS_ID;
+            ORDER_ITEM.posId = '8502-17308' //item.DOSHII_POS_ID;
             ORDER_ITEM.options = options;
             return ORDER_ITEM;
         })
