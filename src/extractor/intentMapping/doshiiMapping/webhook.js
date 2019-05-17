@@ -24,21 +24,21 @@ const catchWebhook = (payload, onSuccess) => {
         console.log('payload data:', payload.data)
         const { status, id, locationId } = payload.data;
         if (status === "accepted") {
-          postToDatabase(`orders/updateStatus/${id}`, () => {}, {
+          postToDatabase(`db/orders/updateStatus/${id}`, () => {}, {
             STATUS: status
           }).then(() => {
             //send successfully placed text
             sms.sendOrderSuccessSms(order.CUSTOMER_NAME, order.CUSTOMER_PHONE);
           });
         } else if (status === "rejected") {
-          postToDatabase(`orders/updateStatus/${id}`, () => {}, {
+          postToDatabase(`db/orders/updateStatus/${id}`, () => {}, {
             STATUS: status
           }).then(() => {
             //send failure text
             sms.sendOrderFailureSms(order.CUSTOMER_NAME, order.CUSTOMER_PHONE);
           });
         } else if (status === "completed") {
-          postToDatabase(`orders/updateStatus/${id}`, () => {}, {
+          postToDatabase(`db/orders/updateStatus/${id}`, () => {}, {
             STATUS: status
           }).then(() => {
             // send ready for pickup sms
