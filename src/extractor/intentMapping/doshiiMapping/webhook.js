@@ -55,15 +55,23 @@ const catchWebhook = (payload, onSuccess) => {
         }).then(() => {
           // cancel doshii order
           orderCommands['CANCEL_ORDER']({orderId: DOSHII_ID, doshiiLocationId: DOSHII_LOCATION_ID, status: 'cancelled'}, ()=>{});
-          let og_transaction_id;
-          orderCommands['RETRIEVE_ORDER']({doshiiLocationId: DOSHII_LOCATION_ID, orderId: DOSHII_ID}, (res) => { 
-            og_transaction_id = res.transactions[0].id
-            console.log(res.transactions[0]);
-          });
-          console.log('trxId', og_transaction_id);
+          
+          const refundTrx = (res) => {
+            console.log(res.transactions)
+            transactionCommands['CREATE_TRANSACTION']({
+              orderId: DOSHII_ID, 
+              doshiiLocationId: DOSHII_LOCATION_ID, 
+              method: 'cash', 
+              prepaid: true, 
+              linkedTrxId: res.transactions[0].id, 
+              reference: res.transactions[0].id, 
+              amount: parseInt(order.ORDER_TOTAL) * -1}, ()=>{ console.log('refund placed')
+            });
+          }
+
+          orderCommands['RETRIEVE_ORDER']({doshiiLocationId: DOSHII_LOCATION_ID, orderId: DOSHII_ID}, (res) => refundTrx(res));
           // issue refund - ask AVC, eftpos refund option?
           // send refund order (negative balance for reconciliation)
-          transactionCommands['CREATE_TRANSACTION']({orderId: DOSHII_ID, doshiiLocationId: DOSHII_LOCATION_ID, method: 'cash', prepaid: true, linkedTrxId: og_transaction_id, reference: og_transaction_id, amount: parseInt(order.ORDER_TOTAL) * -1}, ()=>{ console.log('refund placed')});
           // send failure text
           sms.sendOrderFailureSms(order.CUSTOMER_NAME, order.CUSTOMER_PHONE);
         });
