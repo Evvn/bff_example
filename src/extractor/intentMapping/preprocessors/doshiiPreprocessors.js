@@ -35,33 +35,35 @@ export const createOrderPreprocess = (rawOrders, doshiiLocationId) => {
         items: Object.keys(items).map(itemKey => {
             const { ORDER_ITEM } = createOrder;
             const item = items[itemKey];
-            const options = //!item.addOns ? [] : //item.addOns
-                //.map(addon => {
-                    [{
-                        name: 'Coffee & Tea Mods', //addon.name,
-                        posId: '191',//addon.DOSHII_POS_ID,
-                        variants: [{
-                            name: 'Add Soy',
-                            posId: '8502-19015',
-                            price: 50, 
-                        },
-                        {
-                            name: 'Almond Milk',
-                            posId: '8502-19131',
-                            price: 50, 
-                        },
-                        {
-                            name: 'Decaf',
-                            posId: '8502-19130',
-                            price: 0, 
-                        }]//addon.PRICE,
-                    }];
-               // });
-            ORDER_ITEM.name = "English B'Fast"//item.name;
-            ORDER_ITEM.unitPrice = 400;//item.price;
-            ORDER_ITEM.totalBeforeSurcounts = 500;//item.price;
-            ORDER_ITEM.totalAfterSurcounts = 500;//item.price;
-            ORDER_ITEM.posId = '8502-19001' //item.DOSHII_POS_ID;
+            const options = !item.addOns ? [] : item.addOns;
+            //     .map(addon => {
+            //         options: []
+            //         [{
+            //             name: 'Coffee & Tea Mods', //addon.name,
+            //             posId: '191',//addon.DOSHII_POS_ID,
+            //             variants: [{
+            //                 name: 'Add Soy',
+            //                 posId: '8502-19015',
+            //                 price: 50, 
+            //             },
+            //             {
+            //                 name: 'Almond Milk',
+            //                 posId: '8502-19131',
+            //                 price: 50, 
+            //             },
+            //             {
+            //                 name: 'Decaf',
+            //                 posId: '8502-19130',
+            //                 price: , 
+            //             }]//addon.PRICE,
+            //         }];
+            //    });
+            ORDER_ITEM.quantity = item.quantity;
+            ORDER_ITEM.name = item.name;
+            ORDER_ITEM.unitPrice = item.price;
+            ORDER_ITEM.totalBeforeSurcounts = item.totalBeforeSurcounts;
+            ORDER_ITEM.totalAfterSurcounts = item.totalBeforeSurcounts;
+            ORDER_ITEM.posId = item.DOSHII_POS_ID;
             ORDER_ITEM.options = options;
             return ORDER_ITEM;
         })
