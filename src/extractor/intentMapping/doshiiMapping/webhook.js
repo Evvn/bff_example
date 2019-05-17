@@ -34,6 +34,21 @@ const catchWebhook = (payload, onSuccess) => {
           postToDatabase(`db/orders/updateStatus/${id}`, () => {}, {
             STATUS: status
           }).then(() => {
+            const refundTrx = (res) => {
+              console.log(res.transactions)
+              transactionCommands['CREATE_TRANSACTION']({
+                orderId: DOSHII_ID, 
+                doshiiLocationId: DOSHII_LOCATION_ID, 
+                method: 'cash', 
+                prepaid: true, 
+                linkedTrxId: res.transactions[0].id, 
+                reference: res.transactions[0].id, 
+                amount: parseInt(order.ORDER_TOTAL) * -1}, ()=>{ console.log('refund placed')
+              });
+            }
+
+            orderCommands['RETRIEVE_ORDER']({doshiiLocationId: DOSHII_LOCATION_ID, orderId: DOSHII_ID}, (res) => refundTrx(res));
+
             //send failure text
             sms.sendOrderFailureSms(order.CUSTOMER_NAME, order.CUSTOMER_PHONE);
           });
@@ -58,20 +73,6 @@ const catchWebhook = (payload, onSuccess) => {
             // cancel doshii order
             orderCommands['CANCEL_ORDER']({orderId: DOSHII_ID, doshiiLocationId: DOSHII_LOCATION_ID, status: 'cancelled'}, ()=>{});
             
-            const refundTrx = (res) => {
-              console.log(res.transactions)
-              transactionCommands['CREATE_TRANSACTION']({
-                orderId: DOSHII_ID, 
-                doshiiLocationId: DOSHII_LOCATION_ID, 
-                method: 'cash', 
-                prepaid: true, 
-                linkedTrxId: res.transactions[0].id, 
-                reference: res.transactions[0].id, 
-                amount: parseInt(order.ORDER_TOTAL) * -1}, ()=>{ console.log('refund placed')
-              });
-            }
-
-            orderCommands['RETRIEVE_ORDER']({doshiiLocationId: DOSHII_LOCATION_ID, orderId: DOSHII_ID}, (res) => refundTrx(res));
             // issue refund - ask AVC, eftpos refund option?
             // send refund order (negative balance for reconciliation)
             // send failure text
