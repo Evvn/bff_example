@@ -58,7 +58,7 @@ export const createOrderPreprocess = (rawOrders, doshiiLocationId) => {
                     }];
                // });
             ORDER_ITEM.name = "English B'Fast"//item.name;
-            ORDER_ITEM.unitPrice = 500;//item.price;
+            ORDER_ITEM.unitPrice = 400;//item.price;
             ORDER_ITEM.totalBeforeSurcounts = 500;//item.price;
             ORDER_ITEM.totalAfterSurcounts = 500;//item.price;
             ORDER_ITEM.posId = '8502-19001' //item.DOSHII_POS_ID;
