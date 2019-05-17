@@ -191,7 +191,7 @@ const orderingRouter = (services, router) => {
       },
       onSuccess: payload => {
         console.log('payload:', payload);
-       //response.json(payload);
+       response.json(payload);
       },
       onFailure: next
     });
@@ -209,7 +209,9 @@ const orderingRouter = (services, router) => {
         ...body
       },
       onSuccess: payload => {
-       response.json(payload);
+        console.log('payload:', payload);
+
+       //response.json(payload);
       },
       onFailure: next
     });
