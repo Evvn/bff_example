@@ -17,69 +17,73 @@ const doshii = doshiiConnector({
 
 const catchWebhook = (payload, onSuccess) => {
   const { event } = payload;
-  const processOrder = order => {
-    console.log(order);
-    if (event === "order_updated") {
-	    const { status, id, locationId } = payload.data;
-      if (status === "accepted") {
-        postToDatabase(`orders/updateStatus/${id}`, () => {}, {
-          STATUS: status
-        }).then(() => {
-          //send successfully placed text
-          sms.sendOrderSuccessSms(order.CUSTOMER_NAME, order.CUSTOMER_PHONE);
-        });
-      } else if (status === "rejected") {
-        postToDatabase(`orders/updateStatus/${id}`, () => {}, {
-          STATUS: status
-        }).then(() => {
-          //send failure text
-          sms.sendOrderFailureSms(order.CUSTOMER_NAME, order.CUSTOMER_PHONE);
-        });
-      } else if (status === "completed") {
-        postToDatabase(`orders/updateStatus/${id}`, () => {}, {
-          STATUS: status
-        }).then(() => {
-          // send ready for pickup sms
-          sms.sendPickupReadySms(
-            order.CUSTOMER_NAME,
-            order.CUSTOMER_PHONE,
-            order.REDEMPTION_CODE
-          );
-        });
-      }
-    } else if (event === "pending_timeout") {
-      const { STATUS, DOSHII_ID, DOSHII_LOCATION_ID } = payload.order;
-      if (order.STATUS === "pending") {
-        postToDatabase(`db/orders/updateStatus/${DOSHII_ID}`, () => {}, {
-          STATUS: "cancelled"
-        }).then(() => {
-          // cancel doshii order
-          orderCommands['CANCEL_ORDER']({orderId: DOSHII_ID, doshiiLocationId: DOSHII_LOCATION_ID, status: 'cancelled'}, ()=>{});
-          
-          const refundTrx = (res) => {
-            console.log(res.transactions)
-            transactionCommands['CREATE_TRANSACTION']({
-              orderId: DOSHII_ID, 
-              doshiiLocationId: DOSHII_LOCATION_ID, 
-              method: 'cash', 
-              prepaid: true, 
-              linkedTrxId: res.transactions[0].id, 
-              reference: res.transactions[0].id, 
-              amount: parseInt(order.ORDER_TOTAL) * -1}, ()=>{ console.log('refund placed')
-            });
-          }
+  if (payload.event) {
+    const processOrder = order => {
+      console.log(order);
+      if (event === "order_updated") {
+        const { status, id, locationId } = payload.data;
+        if (status === "accepted") {
+          postToDatabase(`orders/updateStatus/${id}`, () => {}, {
+            STATUS: status
+          }).then(() => {
+            //send successfully placed text
+            sms.sendOrderSuccessSms(order.CUSTOMER_NAME, order.CUSTOMER_PHONE);
+          });
+        } else if (status === "rejected") {
+          postToDatabase(`orders/updateStatus/${id}`, () => {}, {
+            STATUS: status
+          }).then(() => {
+            //send failure text
+            sms.sendOrderFailureSms(order.CUSTOMER_NAME, order.CUSTOMER_PHONE);
+          });
+        } else if (status === "completed") {
+          postToDatabase(`orders/updateStatus/${id}`, () => {}, {
+            STATUS: status
+          }).then(() => {
+            // send ready for pickup sms
+            sms.sendPickupReadySms(
+              order.CUSTOMER_NAME,
+              order.CUSTOMER_PHONE,
+              order.REDEMPTION_CODE
+            );
+          });
+        }
+      } else if (event === "pending_timeout") {
+        const { STATUS, DOSHII_ID, DOSHII_LOCATION_ID } = payload.order;
+        if (order.STATUS === "pending") {
+          postToDatabase(`db/orders/updateStatus/${DOSHII_ID}`, () => {}, {
+            STATUS: "cancelled"
+          }).then(() => {
+            // cancel doshii order
+            orderCommands['CANCEL_ORDER']({orderId: DOSHII_ID, doshiiLocationId: DOSHII_LOCATION_ID, status: 'cancelled'}, ()=>{});
+            
+            const refundTrx = (res) => {
+              console.log(res.transactions)
+              transactionCommands['CREATE_TRANSACTION']({
+                orderId: DOSHII_ID, 
+                doshiiLocationId: DOSHII_LOCATION_ID, 
+                method: 'cash', 
+                prepaid: true, 
+                linkedTrxId: res.transactions[0].id, 
+                reference: res.transactions[0].id, 
+                amount: parseInt(order.ORDER_TOTAL) * -1}, ()=>{ console.log('refund placed')
+              });
+            }
 
-          orderCommands['RETRIEVE_ORDER']({doshiiLocationId: DOSHII_LOCATION_ID, orderId: DOSHII_ID}, (res) => refundTrx(res));
-          // issue refund - ask AVC, eftpos refund option?
-          // send refund order (negative balance for reconciliation)
-          // send failure text
-          sms.sendOrderFailureSms(order.CUSTOMER_NAME, order.CUSTOMER_PHONE);
-        });
+            orderCommands['RETRIEVE_ORDER']({doshiiLocationId: DOSHII_LOCATION_ID, orderId: DOSHII_ID}, (res) => refundTrx(res));
+            // issue refund - ask AVC, eftpos refund option?
+            // send refund order (negative balance for reconciliation)
+            // send failure text
+            sms.sendOrderFailureSms(order.CUSTOMER_NAME, order.CUSTOMER_PHONE);
+          });
+        }
       }
-    }
-  };
-	let ID = payload.order ? payload.order.DOSHII_ID : payload.data.id;
-  callDatabase(`db/orders/${ID}`, processOrder);
+    };
+    let ID = payload.order ? payload.order.DOSHII_ID : payload.data.id;
+    callDatabase(`db/orders/${ID}`, processOrder);
+  } else {
+    console.log('verifying')
+  }
 };
 
 const webhook = {

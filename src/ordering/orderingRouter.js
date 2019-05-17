@@ -183,10 +183,11 @@ const orderingRouter = (services, router) => {
   router.post("/ordering/webhook", (request, response, next) => {
     const { verify } = request.query;
 	  console.log(request.body)
-    const body = request.body
+    const body = request.body.body ? request.body.body : request.body
     console.log("##Webhook caught: ", body);
     orderingService.doshii_catch_webhook({
       context: {
+        ...body
       },
       onSuccess: payload => {
         console.log('payload:', payload);
@@ -208,9 +209,7 @@ const orderingRouter = (services, router) => {
         ...body
       },
       onSuccess: payload => {
-        console.log('payload:', payload);
-
-       //response.json(payload);
+       response.json(payload);
       },
       onFailure: next
     });
@@ -229,7 +228,7 @@ const orderingRouter = (services, router) => {
       },
       onSuccess: payload => {
         console.log('payload: ', payload);
-        response.json(payload);
+        response.send('Success');
       },
       onFailure: next
     });
