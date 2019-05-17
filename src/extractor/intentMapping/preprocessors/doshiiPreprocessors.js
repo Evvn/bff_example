@@ -35,10 +35,8 @@ export const createOrderPreprocess = (rawOrders, doshiiLocationId) => {
         items: Object.keys(items).map(itemKey => {
             const { ORDER_ITEM } = createOrder;
             const item = items[itemKey];
-            let variantAddition = 0;
             const variants = !item.addOns ? [] : item.addOns
                 .map(addon => {
-                    variantAddition = variantAddition + 80; //addon.price;
                     return {
                         name: 'vego', //addon.name,
                         posId: '000022',//addon.DOSHII_POS_ID,
@@ -48,7 +46,7 @@ export const createOrderPreprocess = (rawOrders, doshiiLocationId) => {
             ORDER_ITEM.name = item.name;
             ORDER_ITEM.unitPrice = item.price;
             ORDER_ITEM.totalBeforeSurcounts = item.price;
-            ORDER_ITEM.totalAfterSurcounts = item.price + variantAddition;
+            ORDER_ITEM.totalAfterSurcounts = item.price;
             ORDER_ITEM.posId = '0000000026' //item.DOSHII_POS_ID;
             ORDER_ITEM.variants = variants;
             return ORDER_ITEM;
