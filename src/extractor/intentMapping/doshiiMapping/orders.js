@@ -84,6 +84,7 @@ const orders = {
           buildDatabasePayload(params.body, response.id, params.doshiiLocationId)
         ).then(() => {
           clearTimeout(timedOut);
+          console.log('create:', response);
           onSuccess(response);
         });
       });
