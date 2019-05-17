@@ -21,7 +21,7 @@ export const createOrderPreprocess = (rawOrders, doshiiLocationId) => {
 
     //Add Trasaction Data
     orderPayload.transactions = [{
-            amount: orderTotal,
+            amount: 500,//orderTotal,
             reference: stripeId,
             prepaid: true,
             method: 'credit',
@@ -38,20 +38,30 @@ export const createOrderPreprocess = (rawOrders, doshiiLocationId) => {
             const options = //!item.addOns ? [] : //item.addOns
                 //.map(addon => {
                     [{
-                        name: 'Postmix Modifiers', //addon.name,
-                        posId: '193',//addon.DOSHII_POS_ID,
+                        name: 'Coffee & Tea Mods', //addon.name,
+                        posId: '191',//addon.DOSHII_POS_ID,
                         variants: [{
-                            name: 'Add Cordial',
-                            posId: '8502-15400',
+                            name: 'Add Soy',
+                            posId: '8502-19015',
+                            price: 50, 
+                        },
+                        {
+                            name: 'Almond Milk',
+                            posId: '8502-19131',
+                            price: 50, 
+                        },
+                        {
+                            name: 'Decaf',
+                            posId: '8502-19130',
                             price: 0, 
                         }]//addon.PRICE,
                     }];
                // });
-            ORDER_ITEM.name = 'Juice Schooner'//item.name;
-            ORDER_ITEM.unitPrice = item.price;
-            ORDER_ITEM.totalBeforeSurcounts = item.price;
-            ORDER_ITEM.totalAfterSurcounts = item.price;
-            ORDER_ITEM.posId = '8502-16300' //item.DOSHII_POS_ID;
+            ORDER_ITEM.name = "English B'Fast"//item.name;
+            ORDER_ITEM.unitPrice = 400;//item.price;
+            ORDER_ITEM.totalBeforeSurcounts = 400;//item.price;
+            ORDER_ITEM.totalAfterSurcounts = 400;//item.price;
+            ORDER_ITEM.posId = '8502-19001' //item.DOSHII_POS_ID;
             ORDER_ITEM.options = options;
             return ORDER_ITEM;
         })
