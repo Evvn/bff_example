@@ -2,8 +2,10 @@ import doshiiConnector from "@mryum/doshii-sdk";
 import * as intents from "../../../ordering/intents/doshiiIntents.js";
 import sendSms from "../../../util/sendSms.js";
 import * as templates from "../../../enums/commonEnums.js";
-import { callDatabase } from "../../../util/callDatabase.js";
+import { callDatabase, postToDatabase } from "../../../util/callDatabase.js";
 import * as sms from "../../../enums/smsEnums.js";
+import orderCommands from "./orders.js";
+import transactionCommands from "./transactions.js";
 
 const doshii = doshiiConnector({
   clientId: process.env.DOSHII_CLIENT_ID,
@@ -13,54 +15,92 @@ const doshii = doshiiConnector({
   silent: false
 });
 
-const catchWebhook = payload => {
-  const { event, data } = payload;
-  const { status, id } = data;
+const catchWebhook = (payload, onSuccess) => {
+  const { event } = payload;
+  if (payload.event) {
+    const processOrder = order => {
+      console.log(order);
+      if (event === "order_updated") {
+        console.log("payload data:", payload.data);
+        const { status, id, locationId } = payload.data;
+        if (status === "accepted") {
+          postToDatabase(`db/orders/updateStatus/${id}`, () => {}, {
+            STATUS: status
+          }).then(() => {
+            //send successfully placed text
+            sms.sendOrderSuccessSms(order.CUSTOMER_NAME, order.CUSTOMER_PHONE);
+          });
+        } else if (status === "rejected") {
+          postToDatabase(`db/orders/updateStatus/${id}`, () => {}, {
+            STATUS: status
+          }).then(() => {
+            const refundTrx = res => {
+              console.log(res.transactions);
+              transactionCommands["CREATE_TRANSACTION"](
+                {
+                  orderId: DOSHII_ID,
+                  doshiiLocationId: DOSHII_LOCATION_ID,
+                  method: "cash",
+                  prepaid: true,
+                  linkedTrxId: res.transactions[0].id,
+                  reference: res.transactions[0].id,
+                  amount: parseInt(order.ORDER_TOTAL) * -1
+                },
+                () => {
+                  console.log("refund placed");
+                }
+              );
+            };
 
-  processOrder = order => {
-    if (event === "order_updated") {
-      if (status === "accepted") {
-        postToDatabase(`orders/updateStatus/${id}`, () => {}, {
-          STATUS: status
-        }).then(() => {
-          //send successfully placed text
-          sms.sendOrderSuccessSms(order.CUSTOMER_NAME, order.CUSTOMER_PHONE);
-        });
-      } else if (status === "rejected") {
-        postToDatabase(`orders/updateStatus/${id}`, () => {}, {
-          STATUS: status
-        }).then(() => {
-          //send failure text
-          sms.sendOrderFailureSms(order.CUSTOMER_NAME, order.CUSTOMER_PHONE);
-        });
-      } else if (status === "completed") {
-        postToDatabase(`orders/updateStatus/${id}`, () => {}, {
-          STATUS: status
-        }).then(() => {
-          // send ready for pickup sms
-          sms.sendPickupReadySms(
-            order.CUSTOMER_NAME,
-            order.CUSTOMER_PHONE,
-            order.REDEMPTION_CODE
-          );
-        });
-      }
-    } else if (event === "pending_timeout") {
-      if (order.STATUS === "pending") {
-        postToDatabase(`orders/updateStatus/${id}`, () => {}, {
-          STATUS: "canceled"
-        }).then(() => {
-          // cancel doshii order
-          // issue refund - ask AVC, eftpos refund option?
-          // send refund order (negative balance for reconciliation)
-          // send failure text
-          sms.sendOrderFailureSms(order.CUSTOMER_NAME, order.CUSTOMER_PHONE);
-        });
-      }
-    }
-  };
+            orderCommands["RETRIEVE_ORDER"](
+              { doshiiLocationId: DOSHII_LOCATION_ID, orderId: DOSHII_ID },
+              res => refundTrx(res)
+            );
 
-  callDatabase(`orders/${id}`, processOrder);
+            //send failure text
+            sms.sendOrderFailureSms(order.CUSTOMER_NAME, order.CUSTOMER_PHONE);
+          });
+        } else if (status === "completed") {
+          postToDatabase(`db/orders/updateStatus/${id}`, () => {}, {
+            STATUS: status
+          }).then(() => {
+            // send ready for pickup sms
+            sms.sendPickupReadySms(
+              order.CUSTOMER_NAME,
+              order.CUSTOMER_PHONE,
+              order.REDEMPTION_CODE
+            );
+          });
+        }
+      } else if (event === "pending_timeout") {
+        const { STATUS, DOSHII_ID, DOSHII_LOCATION_ID } = payload.order;
+        if (order.STATUS === "pending") {
+          postToDatabase(`db/orders/updateStatus/${DOSHII_ID}`, () => {}, {
+            STATUS: "cancelled"
+          }).then(() => {
+            // cancel doshii order
+            orderCommands["CANCEL_ORDER"](
+              {
+                orderId: DOSHII_ID,
+                doshiiLocationId: DOSHII_LOCATION_ID,
+                status: "cancelled"
+              },
+              () => {}
+            );
+
+            // issue refund - ask AVC, eftpos refund option?
+            // send refund order (negative balance for reconciliation)
+            // send failure text
+            sms.sendOrderFailureSms(order.CUSTOMER_NAME, order.CUSTOMER_PHONE);
+          });
+        }
+      }
+    };
+    let ID = payload.order ? payload.order.DOSHII_ID : payload.data.id;
+    callDatabase(`db/orders/${ID}`, processOrder);
+  } else {
+    console.log("verifying");
+  }
 };
 
 const webhook = {
@@ -79,7 +119,9 @@ const webhook = {
     doshii.Webhooks.delete({ event: params.event }).then(result =>
       onSuccess(result)
     ),
-  [intents.CATCH_WEBHOOK]: (params, onSuccess) => catchWebhook(params)
+  ["CATCH_WEBHOOK"]: (params, onSuccess) => {
+    catchWebhook(params, onSuccess);
+  }
 };
 
 export default webhook;

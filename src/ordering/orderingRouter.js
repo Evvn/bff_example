@@ -182,13 +182,34 @@ const orderingRouter = (services, router) => {
   // webhook registration process
   router.post("/ordering/webhook", (request, response, next) => {
     const { verify } = request.query;
-    console.log("##Webhook caught: ", request.body);
+	  console.log(request.body)
+    const body = request.body.body ? request.body.body : request.body
+    console.log("##Webhook caught: ", body);
     orderingService.doshii_catch_webhook({
       context: {
-        event: verify,
+        ...body
       },
       onSuccess: payload => {
-        
+        console.log('payload:', payload);
+       //response.json(payload);
+      },
+      onFailure: next
+    });
+
+    response.json(verify);
+  });
+
+  router.post("/ordering/webhook/self", (request, response, next) => {
+    const { verify } = request.query;
+	  console.log(request.body)
+    const body = request.body.body ? request.body.body : request.body
+    console.log("##Webhook caught: ", body);
+    orderingService.doshii_catch_webhook({
+      context: {
+        ...body
+      },
+      onSuccess: payload => {
+       response.json(payload);
       },
       onFailure: next
     });
@@ -206,7 +227,8 @@ const orderingRouter = (services, router) => {
         webhookUrl: 'https://api.mryumqa.com.au:5000/yumbff/ordering/webhook'
       },
       onSuccess: payload => {
-        response.json(payload)
+        console.log('payload: ', payload);
+        response.send('Success');
       },
       onFailure: next
     });
