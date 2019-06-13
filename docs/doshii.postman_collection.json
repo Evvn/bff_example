@@ -1,0 +1,137 @@
+{
+	"info": {
+		"_postman_id": "d34ca888-d026-4cc8-b917-68bbaaf8d641",
+		"name": "doshii",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "https://api.mryumqa.com.au:5000/yumbff/ordering/doshii/8KXM0OD4/subscribe",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "intents",
+						"value": "[RETRIEVE_ALL_LOCATIONS]",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer keyhJXPaLjQC0OufW",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"params\": {\n\t\t\"doshiiLocationId\": \"8KXM0OD4\"\n\t},\n\t\"intents\": [\"RETRIEVE_ALL_ORDERS\"]\n}"
+				},
+				"url": {
+					"raw": "https://api.mryumqa.com.au:5000/yumbff/ordering/doshii/8KXM0OD4/subscribe",
+					"protocol": "https",
+					"host": [
+						"api",
+						"mryumqa",
+						"com",
+						"au"
+					],
+					"port": "5000",
+					"path": [
+						"yumbff",
+						"ordering",
+						"doshii",
+						"8KXM0OD4",
+						"subscribe"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": "",
+							"disabled": true
+						}
+					]
+				},
+				"description": "subscribe to location"
+			},
+			"response": []
+		},
+		{
+			"name": "https://api.mryumqa.com.au:5000/yumbff/ordering/webhook?verify=order_updated",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://api.mryumqa.com.au:5000/yumbff/ordering/webhook?verify=order_updated",
+					"protocol": "https",
+					"host": [
+						"api",
+						"mryumqa",
+						"com",
+						"au"
+					],
+					"port": "5000",
+					"path": [
+						"yumbff",
+						"ordering",
+						"webhook"
+					],
+					"query": [
+						{
+							"key": "verify",
+							"value": "order_updated"
+						}
+					]
+				},
+				"description": "subscribe to order_updated webhook"
+			},
+			"response": []
+		},
+		{
+			"name": "https://api.mryumqa.com.au:5000/yumbff/ordering/8KXM0OD4/createOrder",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"items\":{\"recJUGVemeIPJSYQV\":{\"id\":\"recJUGVemeIPJSYQV\",\"name\":\"Cheesy Kids Pizza\",\"addOns\":false,\"modifiers\":[],\"price\":1000,\"doshiiPosId\":\"18117\",\"quantity\":1}},\"stripeId\":\"1785\",\"name\":\"Bichael\",\"phone\":\"+61413206203\",\"doshiiLocationId\":\"8KXM0OD4\",\"orderTotal\":1000,\"clientType\":\"pickup\",\"code\":\"1780\",\"venueName\":\"wv\"}"
+				},
+				"url": {
+					"raw": "https://api.mryumqa.com.au:5000/yumbff/ordering/8KXM0OD4/createOrder",
+					"protocol": "https",
+					"host": [
+						"api",
+						"mryumqa",
+						"com",
+						"au"
+					],
+					"port": "5000",
+					"path": [
+						"yumbff",
+						"ordering",
+						"8KXM0OD4",
+						"createOrder"
+					]
+				},
+				"description": "create order"
+			},
+			"response": []
+		}
+	]
+}

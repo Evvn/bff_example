@@ -1,0 +1,72 @@
+{
+	"info": {
+		"_postman_id": "f610f4a1-4184-437a-a224-bd2797c0be7b",
+		"name": "DB Server",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "localhost:5000/db/orders",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"STRIPE_ID\": \"TEST-0000001\",\n\t\"VENUE_NAME\": \"TESTVENUE\",\n\t\"ITEMS\": \"ITEM 1 X2, ITEM2 X3\",\n\t\"CUSTOMER_NAME\": \"TEST TESTER\",\n\t\"CUSTOMER_PHONE\": \"+61413206203\",\n\t\"CLIENT_TYPE\": \"PICKUP\",\n\t\"REDEMPTION_CODE\": \"7777\",\n\t\"ORDER_TOTAL\": \"22.50\",\n\t\"STATUS\": \"PENDING\"\n}"
+				},
+				"url": {
+					"raw": "localhost:5000/db/orders",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"db",
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "localhost:5000/db/orders/updateStatus/TEST-0000001",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"STATUS\": \"COMPLETED\"\n}"
+				},
+				"url": {
+					"raw": "localhost:5000/db/orders/updateStatus/TEST-0000001",
+					"host": [
+						"localhost"
+					],
+					"port": "5000",
+					"path": [
+						"db",
+						"orders",
+						"updateStatus",
+						"TEST-0000001"
+					]
+				},
+				"description": "Update OrderStatus"
+			},
+			"response": []
+		}
+	]
+}
