@@ -23,8 +23,9 @@ const catchWebhook = (payload, onSuccess) => {
       if (event === "order_updated") {
         console.log("payload data:", payload.data);
         const { status, id, locationId } = payload.data;
-        console.log("/////" + payload);
-        console.log("#####" + order);
+
+        console.log("/////\n\n" + JSON.stringify(payload));
+        console.log("#####\n\n" + JSON.stringify(order));
 
         if (status === "accepted") {
           postToDatabase(`db/orders/updateStatus/${id}`, () => {}, {
