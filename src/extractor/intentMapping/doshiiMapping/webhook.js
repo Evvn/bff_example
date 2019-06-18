@@ -43,7 +43,7 @@ const catchWebhook = (payload, onSuccess) => {
               transactionCommands["CREATE_TRANSACTION"](
                 {
                   orderId: DOSHII_ID,
-                  doshiiLocationId: DOSHII_LOCATION_ID,
+                  locationId: DOSHII_LOCATION_ID,
                   method: "cash",
                   prepaid: true,
                   linkedTrxId: res.transactions[0].id,
