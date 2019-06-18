@@ -80,11 +80,16 @@ const orders = {
         createOrderPreprocess(params.body, params.doshiiLocationId)
       ).then(response => {
         postToDatabase(
-          "db/orders", () => {},
-          buildDatabasePayload(params.body, response.id, params.doshiiLocationId)
+          "db/orders",
+          () => {},
+          buildDatabasePayload(
+            params.body,
+            response.id,
+            params.doshiiLocationId
+          )
         ).then(() => {
           clearTimeout(timedOut);
-          console.log('create:', response);
+          console.log("create:", response);
           onSuccess(response);
         });
       });
@@ -94,7 +99,9 @@ const orders = {
     }
   },
   [intents.UPDATE_ORDER]: params => doshii.Orders.update(params),
-  ['CANCEL_ORDER']: (params, onSuccess) => {cancelOrder(params, onSuccess)},
+  ["CANCEL_ORDER"]: (params, onSuccess) => {
+    cancelOrder(params, onSuccess);
+  },
   [intents.RETRIEVE_ORDER_TRANSACTIONS]: params =>
     doshii.Orders.retrieveTransactions(params),
   [intents.CREATE_ORDER_TRANSACTION]: params =>
