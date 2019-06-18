@@ -33,10 +33,10 @@
       "surcounts": []
     }
   ],
-  "stripeId": "12576834",
+  "stripeId": "000000013",
   "name": "E v a n",
   "phone": "+61413206203",
-  "doshiiLocationId": "8KXM0OD4",
+  "locationId": "8KXM0OD4",
   "orderTotal": 850,
   "clientType": "pickup",
   "code": "1790",
