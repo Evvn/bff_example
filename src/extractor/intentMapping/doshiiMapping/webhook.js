@@ -57,7 +57,7 @@ const catchWebhook = (payload, onSuccess) => {
             };
 
             orderCommands["RETRIEVE_ORDER"](
-              { locationId: DOSHII_LOCATION_ID, orderId: DOSHII_ID },
+              { doshiiLocationId: DOSHII_LOCATION_ID, orderId: DOSHII_ID },
               res => refundTrx(res)
             );
 
