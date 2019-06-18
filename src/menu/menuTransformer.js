@@ -21,6 +21,9 @@ const transformMenuItem = menuItem => {
 };
 
 const buildMenuPayload = data => {
+  console.log("----------- BUILD MENU PAYLOAD -----------");
+  console.log(data);
+
   let payload = data.items;
   const newPayload = {};
   payload.map(item => {
