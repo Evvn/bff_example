@@ -1,8 +1,8 @@
 import {
   GET_ORDER_MENU_DATA,
   MAKE_STRIPE_CHARGE,
-  SEND_SMS,
-} from './intents/orderIntents';
+  SEND_SMS
+} from "./intents/orderIntents";
 
 import {
   SUBSCRIBE_LOCATION,
@@ -16,48 +16,43 @@ import {
   CREATE_WEBHOOKS,
   RETRIEVE_WEBHOOKS,
   DELETE_WEBHOOKS,
-  CATCH_WEBHOOK,
+  CATCH_WEBHOOK
 } from "./intents/doshiiIntents";
 
-const orderingService = ({ doshiiTransformer, orderMenuTransformer }, extractor) => {
-
-  const getOrderMenuData = ({
-    context, onSuccess, onFailure,
-  }) => {
+const orderingService = (
+  { doshiiTransformer, orderMenuTransformer },
+  extractor
+) => {
+  const getOrderMenuData = ({ context, onSuccess, onFailure }) => {
     extractor.readMany({
       intents: [GET_ORDER_MENU_DATA],
       context,
-      onSuccess: (payload) => {
+      onSuccess: payload => {
         onSuccess(orderMenuTransformer.getOrderMenuData(payload));
       },
-      onFailure,
+      onFailure
     });
   };
 
-
-  const makeStripeCharge = ({
-    context, onSuccess, onFailure,
-  }) => {
+  const makeStripeCharge = ({ context, onSuccess, onFailure }) => {
     extractor.readMany({
       intents: [MAKE_STRIPE_CHARGE],
       context,
-      onSuccess: (payload) => {
+      onSuccess: payload => {
         onSuccess(orderMenuTransformer.getStripeResponse(payload));
       },
-      onFailure,
+      onFailure
     });
   };
 
-  const sendSms = ({
-    context, onSuccess, onFailure,
-  }) => {
+  const sendSms = ({ context, onSuccess, onFailure }) => {
     extractor.readMany({
       intents: [SEND_SMS],
       context,
-      onSuccess: (payload) => {
+      onSuccess: payload => {
         onSuccess(orderMenuTransformer.getSmsResponse(payload));
       },
-      onFailure,
+      onFailure
     });
   };
 
@@ -126,7 +121,7 @@ const orderingService = ({ doshiiTransformer, orderMenuTransformer }, extractor)
     });
   };
 
-  const doshii_createCheckin = ({ context, onSuccess,  onFailure }) => {
+  const doshii_createCheckin = ({ context, onSuccess, onFailure }) => {
     extractor.readMany({
       intents: [CREATE_CHECKIN],
       context,
@@ -146,7 +141,7 @@ const orderingService = ({ doshiiTransformer, orderMenuTransformer }, extractor)
       },
       onFailure
     });
-  }
+  };
 
   const doshii_create_webhook = ({ context, onSuccess, onFailure }) => {
     extractor.readMany({
@@ -157,7 +152,7 @@ const orderingService = ({ doshiiTransformer, orderMenuTransformer }, extractor)
       },
       onFailure
     });
-  }
+  };
 
   const doshii_delete_webhook = ({ context, onSuccess, onFailure }) => {
     extractor.readMany({
@@ -168,7 +163,7 @@ const orderingService = ({ doshiiTransformer, orderMenuTransformer }, extractor)
       },
       onFailure
     });
-  }
+  };
 
   const doshii_get_webhook = ({ context, onSuccess, onFailure }) => {
     extractor.readMany({
@@ -179,10 +174,10 @@ const orderingService = ({ doshiiTransformer, orderMenuTransformer }, extractor)
       },
       onFailure
     });
-  }
+  };
 
   const doshii_catch_webhook = ({ context, onSuccess, onFailure }) => {
-	  console.log('service', context)
+    console.log("service", context);
     extractor.readMany({
       intents: [CATCH_WEBHOOK],
       context,
@@ -191,8 +186,7 @@ const orderingService = ({ doshiiTransformer, orderMenuTransformer }, extractor)
       },
       onFailure
     });
-  }
-
+  };
 
   return {
     getOrderMenuData,
@@ -209,10 +203,8 @@ const orderingService = ({ doshiiTransformer, orderMenuTransformer }, extractor)
     doshii_create_webhook,
     doshii_delete_webhook,
     doshii_get_webhook,
-    doshii_catch_webhook,
+    doshii_catch_webhook
   };
 };
-
-
 
 export default orderingService;

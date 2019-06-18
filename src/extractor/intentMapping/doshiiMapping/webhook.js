@@ -19,9 +19,9 @@ const catchWebhook = (payload, onSuccess) => {
   const { event } = payload;
   if (payload.event) {
     const processOrder = order => {
-      console.log(order);
+      // console.log(order);
       if (event === "order_updated") {
-        console.log("payload data:", payload.data);
+        // console.log("payload data:", payload.data);
         const { status, id, locationId } = payload.data;
 
         // console.log("/////\n\n" + JSON.stringify(payload));
@@ -39,7 +39,7 @@ const catchWebhook = (payload, onSuccess) => {
             STATUS: status
           }).then(() => {
             const refundTrx = res => {
-              console.log(res.transactions);
+              // console.log(res.transactions);
               transactionCommands["CREATE_TRANSACTION"](
                 {
                   orderId: order.DOSHII_ID,
@@ -56,8 +56,8 @@ const catchWebhook = (payload, onSuccess) => {
               );
             };
 
-            console.log("..............");
-            console.log(order);
+            // console.log("..............");
+            // console.log(order);
 
             orderCommands["RETRIEVE_ORDER"](
               {

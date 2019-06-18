@@ -48,7 +48,7 @@ const cancelOrder = (params, onSuccess) => {
         });
       }
     });
-    console.log(result);
+    // console.log(result);
     onSuccess(result);
   });
 };
