@@ -17,6 +17,19 @@ const orderingRouter = (services, router) => {
     });
   });
 
+  router.post("/ordering/createcustomer", (request, response, next) => {
+    const { authorizationToken, requestId } = response.locals;
+    orderingService.createCustomer({
+      context: {
+        body: request.body
+      },
+      onSuccess: payload => {
+        response.json(payload);
+      },
+      onFailure: next
+    });
+  });
+
   router.post("/ordering/payment", (request, response, next) => {
     const { authorizationToken, requestId } = response.locals;
     orderingService.makeStripeCharge({
@@ -33,6 +46,19 @@ const orderingRouter = (services, router) => {
   router.post("/ordering/sms", (request, response, next) => {
     const { authorizationToken, requestId } = response.locals;
     orderingService.sendSms({
+      context: {
+        body: request.body
+      },
+      onSuccess: payload => {
+        response.json(payload);
+      },
+      onFailure: next
+    });
+  });
+
+  router.post("/ordering/confirmationsms", (request, response, next) => {
+    const { authorizationToken, requestId } = response.locals;
+    orderingService.sendConfirmationSms({
       context: {
         body: request.body
       },

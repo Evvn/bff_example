@@ -1,7 +1,9 @@
 import {
   GET_ORDER_MENU_DATA,
+  CREATE_STRIPE_CUSTOMER,
   MAKE_STRIPE_CHARGE,
-  SEND_SMS
+  SEND_SMS,
+  SEND_CONFIRMATION_SMS
 } from "./intents/orderIntents";
 
 import {
@@ -34,6 +36,17 @@ const orderingService = (
     });
   };
 
+  const createCustomer = ({ context, onSuccess, onFailure }) => {
+    extractor.readMany({
+      intents: [CREATE_STRIPE_CUSTOMER],
+      context,
+      onSuccess: payload => {
+        onSuccess(orderMenuTransformer.getCustomerResponse(payload));
+      },
+      onFailure
+    });
+  };
+
   const makeStripeCharge = ({ context, onSuccess, onFailure }) => {
     extractor.readMany({
       intents: [MAKE_STRIPE_CHARGE],
@@ -51,6 +64,17 @@ const orderingService = (
       context,
       onSuccess: payload => {
         onSuccess(orderMenuTransformer.getSmsResponse(payload));
+      },
+      onFailure
+    });
+  };
+
+  const sendConfirmationSms = ({ context, onSuccess, onFailure }) => {
+    extractor.readMany({
+      intents: [SEND_CONFIRMATION_SMS],
+      context,
+      onSuccess: payload => {
+        onSuccess(orderMenuTransformer.getConfirmationSmsResponse(payload));
       },
       onFailure
     });
@@ -190,8 +214,10 @@ const orderingService = (
 
   return {
     getOrderMenuData,
+    createCustomer,
     makeStripeCharge,
     sendSms,
+    sendConfirmationSms,
     doshii_SubscribeLocation,
     doshii_UnsubscribeLocation,
     doshii_createOrder,

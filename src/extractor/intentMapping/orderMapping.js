@@ -58,12 +58,11 @@ const orderingMapping = {
       .create({
         from: "+61488811318",
         to: `+${context.body.number}`,
-        body:
-          `Hi ${
-            context.body.name
-          }, your order is ready for pick up at the Feast Kitchen container. Your redemption code is ${
-            context.body.redemptionCode
-          } ` + emojis.translate("snowflake grin ice_skate pizza snowman")
+        body: `Hi ${
+          context.body.name
+        }, your order is ready for pick up at the Feast Kitchen container. Your redemption code is ${
+          context.body.redemptionCode
+        } ` // + emojis.translate("snowflake grin ice_skate pizza snowman")
       })
       .then(res => {
         // console.log('here')
